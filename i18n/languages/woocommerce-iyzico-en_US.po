@@ -70,5 +70,5 @@ msgsen "Pay with your credit card via iyzico."
 msgid "Thank you for your order, please click the button below to pay with iyzico Checkout."
 msgsen "Thank you for your order, please click the button below to pay with iyzico Checkout."
 
-msgid "Proceed to iyzico checkout"
-msgsen "Proceed to iyzico checkout"
+msgid "Pay With Card"
+msgsen "Pay With Card"

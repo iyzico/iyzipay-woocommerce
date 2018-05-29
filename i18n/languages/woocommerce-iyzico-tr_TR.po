@@ -70,5 +70,5 @@ msgstr "Kredi Kartı - iyzico"
 msgid "Thank you for your order, please click the button below to pay with iyzico Checkout."
 msgstr "Siparişiniz için teşekkür ederiz, iyzico ile ödemek için aşağıdaki düğmeyi tıklayın."
 
-msgid "Proceed to iyzico checkout"
-msgstr "Siparişi Onayla"
+msgid "Pay With Card"
+msgstr "Kredi/Banka Kartı ile Öde"
