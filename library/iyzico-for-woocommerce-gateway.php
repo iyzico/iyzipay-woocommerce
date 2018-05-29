@@ -13,7 +13,7 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
         $this->method_title = __('iyzico', 'iyzico-checkout-for-woocommerce');
         $this->method_description = __('Easy Checkout');
         $this->has_fields = true;
-        $this->order_button_text = __('Proceed to iyzico checkout', 'iyzico-checkout-for-woocommerce');
+        $this->order_button_text = __('Pay With Card', 'iyzico-checkout-for-woocommerce');
         $this->supports = array('products');
 
         $this->init_form_fields();
@@ -22,6 +22,7 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
         $this->title        = $this->get_option( 'title' );
         $this->description  = $this->get_option( 'description' );
         $this->enabled      = $this->get_option( 'enabled' );
+        $this->icon         = plugins_url().IYZICO_PLUGIN_NAME.'/image/cards.png';
 
         add_action('init', array(&$this, 'iyzico_response'));
         add_action('woocommerce_api_wc_gateway_iyzico', array($this, 'iyzico_response'));
