@@ -24,6 +24,7 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
         $this->enabled      = $this->get_option( 'enabled' );
         $this->icon         = plugins_url().IYZICO_PLUGIN_NAME.'/image/cards.png';
 
+
         add_action('init', array(&$this, 'iyzico_response'));
         add_action('woocommerce_api_wc_gateway_iyzico', array($this, 'iyzico_response'));
 
