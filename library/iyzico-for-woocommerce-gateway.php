@@ -10,10 +10,10 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
     public function __construct() {
 
         $this->id = 'iyzico';
-        $this->method_title = __('iyzico', 'iyzico-checkout-for-woocommerce');
+        $this->method_title = __('iyzico', 'woocommerce-iyzico');
         $this->method_description = __('Easy Checkout');
         $this->has_fields = true;
-        $this->order_button_text = __('Pay With Card', 'iyzico-checkout-for-woocommerce');
+        $this->order_button_text = __('Pay With Card', 'woocommerce-iyzico');
         $this->supports = array('products');
 
         $this->init_form_fields();

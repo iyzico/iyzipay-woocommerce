@@ -72,3 +72,6 @@ msgstr "Siparişiniz için teşekkür ederiz, iyzico ile ödemek için aşağıd
 
 msgid "Pay With Card"
 msgstr "Kredi/Banka Kartı ile Öde"
+
+msgid "Siparişi onayla"
+msgstr "Kredi/Banka Kartı ile Öde"
