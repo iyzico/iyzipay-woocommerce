@@ -1,0 +1,74 @@
+msgid ""
+msgsen ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.11\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: en_US\n"
+
+# This file is distributed under the GNU General Public License v2 or later.
+msgid "Api Type"
+msgsen "Api Type"
+
+msgid "Api Key"
+msgsen "Api Key"
+
+msgid "Secret Key"
+msgsen "Secret Key"
+
+msgid "Payment Value"
+msgsen "Payment Value"
+
+msgid "Payment Value Message"
+msgstr "Online Payment"
+
+msgid "Proceed to iyzico checkout"
+msgsen "Proceed to iyzico checkout"
+
+msgid "Payment Form Description Value"
+msgsen "Payment Form Description Value"
+
+msgid "Enable/Disable"
+msgsen "Enable/Disable"
+
+msgid "Enable iyzico checkout"
+msgsen "Enable iyzico checkout"
+
+msgid "Payment Form Design"
+msgsen "Payment Form Design"
+
+
+msgid "Left"
+msgsen "Bottom Left"
+
+msgid "Right"
+msgsen "Bottom Right"
+
+msgid "Hide"
+msgsen "Hide"
+
+msgid "Overlay Script"
+msgsen "Overlay Script"
+
+
+msgid "Installment"
+msgsen "Installment"
+
+msgid "This message will show to the user during checkout."
+msgsen "This message will show to the user during checkout.."
+
+
+msgid "Pay with your credit card via iyzico."
+msgsen "Pay with your credit card via iyzico."
+
+msgid "Thank you for your order, please click the button below to pay with iyzico Checkout."
+msgsen "Thank you for your order, please click the button below to pay with iyzico Checkout."
+
+msgid "Proceed to iyzico checkout"
+msgsen "Proceed to iyzico checkout"
