@@ -28,9 +28,6 @@ msgsen "Payment Value"
 msgid "Payment Value Message"
 msgstr "Online Payment"
 
-msgid "Proceed to iyzico checkout"
-msgsen "Proceed to iyzico checkout"
-
 msgid "Payment Form Description Value"
 msgsen "Payment Form Description Value"
 
