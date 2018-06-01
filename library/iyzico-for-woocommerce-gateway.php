@@ -182,7 +182,7 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
         $user                      = wp_get_current_user();
         $iyzicoConversationId      = WC()->session->set('iyzicoConversationId',$order_id);
         $iyzicoCustomerId          = WC()->session->set('iyzicoCustomerId',$user->ID);
-        $totalAmount               = WC()->session->set('iyzicoOrderTotalAmount',$getOrder->total);
+        $totalAmount               = WC()->session->set('iyzicoOrderTotalAmount',$getOrder->get_total());
 
 
 
