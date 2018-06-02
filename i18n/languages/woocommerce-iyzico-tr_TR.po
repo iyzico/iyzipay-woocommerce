@@ -28,9 +28,6 @@ msgstr "Ödeme Seçeneği Metni"
 msgid "Payment Value Message"
 msgstr "Online Payment"
 
-msgid "Proceed to iyzico checkout"
-msgstr "Ödeme Yap"
-
 msgid "Payment Form Description Value"
 msgstr "Ödeme Seçeneği Açıklaması"
 

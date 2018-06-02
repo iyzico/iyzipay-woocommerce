@@ -182,6 +182,9 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
         $user                      = wp_get_current_user();
         $iyzicoConversationId      = WC()->session->set('iyzicoConversationId',$order_id);
         $iyzicoCustomerId          = WC()->session->set('iyzicoCustomerId',$user->ID);
+        $totalAmount               = WC()->session->set('iyzicoOrderTotalAmount',$getOrder->get_total());
+
+
 
         $formObjectGenerate        = new Iyzico_Checkout_For_WooCommerce_FormObjectGenerate();
         $pkiBuilder                = new Iyzico_Checkout_For_WooCommerce_PkiBuilder();
@@ -202,7 +205,7 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
  
         $requestResponse          = $iyzicoRequest->iyzicoCheckoutFormRequest($baseUrl,$iyzicoJson,$authorizationData);
         $className                = $this->get_option('form_class');
-        $message                  = '<p id="infoBox" style="display:none;">' . __('Thank you for your order, please click the button below to pay with iyzico Checkout.', 'iyzico-woocommerce') . '</p>';
+        $message                  = '<p id="infoBox" style="display:none;">' . __('Thank you for your order, please click the button below to pay with iyzico Checkout.', 'woocommerce-iyzico') . '</p>';
 
         wp_enqueue_script('script', plugins_url().IYZICO_PLUGIN_NAME.'/media/js/iyzico.js',true,'1.3','all');
 
@@ -312,10 +315,21 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
 
             if (isset($requestResponse->installment) && !empty($requestResponse->installment) && $requestResponse->installment > 1) {
 
-                $installment_fee    = $requestResponse->paidPrice - $requestResponse->price;    
+
+                if($requestResponse->price >= $requestResponse->paidPrice) {
+                
+                    $totalPrice         = WC()->session->get('iyzicoOrderTotalAmount');
+                    $installment_fee    = $requestResponse->paidPrice - $totalPrice; 
+
+                } else {
+
+                    $installment_fee    = $requestResponse->paidPrice - $requestResponse->price;
+                }
+
+       
                 $order_fee          = new stdClass();
                 $order_fee->id      = 'Installment Fee';
-                $order_fee->name    = __('Installment Fee', 'iyzico-woocommerce-checkout-form');
+                $order_fee->name    = __('Installment Fee', 'woocommerce-iyzico');
                 $order_fee->amount  = $installment_fee;
                 $order_fee->taxable = false;
                 $fee_id = $order->add_fee($order_fee);
@@ -323,13 +337,15 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
 
              
 
-                update_post_meta($order_id, 'iyzico_no_of_installment',$requestResponse->intallement);
+                update_post_meta($order_id, 'iyzico_no_of_installment',$requestResponse->installment);
                 update_post_meta($order_id, 'iyzico_installment_fee', $installment_fee);
             }
 
             /* Session Unset */
             WC()->session->set('iyzicoConversationId',null);
             WC()->session->set('iyzicoCustomerId',null);
+            WC()->session->set('iyzicoOrderTotalAmount',null);
+
 
             $order->payment_complete();
             $woocommerce->cart->empty_cart();
