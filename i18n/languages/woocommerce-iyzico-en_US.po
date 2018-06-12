@@ -28,9 +28,6 @@ msgsen "Payment Value"
 msgid "Payment Value Message"
 msgstr "Online Payment"
 
-msgid "Proceed to iyzico checkout"
-msgsen "Proceed to iyzico checkout"
-
 msgid "Payment Form Description Value"
 msgsen "Payment Form Description Value"
 
@@ -60,6 +57,9 @@ msgsen "Overlay Script"
 msgid "Installment"
 msgsen "Installment"
 
+msgid "Installment Fee"
+msgsen "Installment Fee"
+
 msgid "This message will show to the user during checkout."
 msgsen "This message will show to the user during checkout.."
 
@@ -70,5 +70,5 @@ msgsen "Pay with your credit card via iyzico."
 msgid "Thank you for your order, please click the button below to pay with iyzico Checkout."
 msgsen "Thank you for your order, please click the button below to pay with iyzico Checkout."
 
-msgid "Proceed to iyzico checkout"
-msgsen "Proceed to iyzico checkout"
+msgid "Pay With Card"
+msgsen "Pay With Card"
