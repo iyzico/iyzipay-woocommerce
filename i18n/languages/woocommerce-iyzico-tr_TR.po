@@ -57,6 +57,9 @@ msgstr "Korumalı Alışveriş"
 msgid "Installment"
 msgstr "Taksit"
 
+msgid "Installment Fee"
+msgstr "Taksit Tutarı"
+
 msgid "This message will show to the user during checkout."
 msgstr "Bu mesaj ödeme sırasında kullanıcıya gösterecektir."
 
