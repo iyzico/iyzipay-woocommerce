@@ -28,9 +28,6 @@ msgstr "Ödeme Seçeneği Metni"
 msgid "Payment Value Message"
 msgstr "Online Payment"
 
-msgid "Proceed to iyzico checkout"
-msgstr "Ödeme Yap"
-
 msgid "Payment Form Description Value"
 msgstr "Ödeme Seçeneği Açıklaması"
 
@@ -60,6 +57,9 @@ msgstr "Korumalı Alışveriş"
 msgid "Installment"
 msgstr "Taksit"
 
+msgid "Installment Fee"
+msgstr "Taksit Tutarı"
+
 msgid "This message will show to the user during checkout."
 msgstr "Bu mesaj ödeme sırasında kullanıcıya gösterecektir."
 
@@ -70,5 +70,8 @@ msgstr "Kredi Kartı - iyzico"
 msgid "Thank you for your order, please click the button below to pay with iyzico Checkout."
 msgstr "Siparişiniz için teşekkür ederiz, iyzico ile ödemek için aşağıdaki düğmeyi tıklayın."
 
-msgid "Proceed to iyzico checkout"
-msgstr "Siparişi Onayla"
+msgid "Pay With Card"
+msgstr "Kredi/Banka Kartı ile Öde"
+
+msgid "Siparişi onayla"
+msgstr "Kredi/Banka Kartı ile Öde"
