@@ -33,15 +33,22 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
             'process_admin_options',
         ) );
         
-                add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array(
+        add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array(
             $this,
             'admin_overlay_script',
         ) );    
 
         add_action('woocommerce_receipt_iyzico', array($this, 'iyzico_loading_bar'));
         add_action('woocommerce_receipt_iyzico', array($this, 'iyzico_payment_form'));
+        
+
+        if(isset($_GET['section']) && $_GET['section'] == 'iyzico') {
+
+            $this->valid_js();
+        }
 
     }
+
 
 
     public function admin_overlay_script() {
@@ -139,12 +146,14 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
 
     }   
 
+    public function valid_js() {
+
+        wp_enqueue_script('script', plugins_url().IYZICO_PLUGIN_NAME.'/media/js/valid_api.js',true,'1.0','all');
+
+    }
     public function init_form_fields() {
         
-        if ( is_admin() ) {
-            wp_enqueue_script('script', plugins_url().IYZICO_PLUGIN_NAME.'/media/js/valid_api.js',true,'1.0','all');
-            $this->form_fields = Iyzico_Checkout_For_WooCommerce_Fields::iyzicoAdminFields();
-        }
+        $this->form_fields = Iyzico_Checkout_For_WooCommerce_Fields::iyzicoAdminFields();
 
     }
 
@@ -324,29 +333,6 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
 
                 $totalPrice         = WC()->session->get('iyzicoOrderTotalAmount');
                 $installment_fee    = $requestResponse->paidPrice - $totalPrice; 
-                
-                /* 
-                    
-                echo $requestResponse->paidPrice;
-                echo "\n";
-                var_dump($requestResponse);
-                exit;
-
-                 1.115,00
-                 6 Taksit 1169.87 TL / 194.98 x 6
-                 54.87
-
-
-                if($requestResponse->price >= $requestResponse->paidPrice) {
-                
-
-
-                } else {
-
-                    $installment_fee    = $requestResponse->paidPrice - $requestResponse->price;
-                }
-                
-                */
        
                 $order_fee          = new stdClass();
                 $order_fee->id      = 'Installment Fee';
