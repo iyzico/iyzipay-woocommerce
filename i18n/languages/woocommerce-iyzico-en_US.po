@@ -57,6 +57,9 @@ msgsen "Overlay Script"
 msgid "Installment"
 msgsen "Installment"
 
+msgid "Installment Fee"
+msgsen "Installment Fee"
+
 msgid "This message will show to the user during checkout."
 msgsen "This message will show to the user during checkout.."
 

@@ -5,11 +5,12 @@
  * Description: iyzico Payment Gateway for WooCommerce.
  * Author: iyzico
  * Author URI: https://iyzico.com
- * Version: 1.0.0
+ * Version: 1.0.4
  * Text Domain: iyzico WooCommerce
  * Domain Path: /i18n/languages/
  *
  */
+
 define('IYZICO_PATH',untrailingslashit( plugin_dir_path( __FILE__ )));
 define('IYZICO_LANG_PATH',plugin_basename(dirname(__FILE__)) . '/i18n/languages/');
 define('IYZICO_PLUGIN_NAME','/'.plugin_basename(dirname(__FILE__)));

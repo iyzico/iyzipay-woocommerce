@@ -16,7 +16,7 @@ class Iyzico_Checkout_For_WooCommerce_Fields {
 		        'default' 	=> 'popup',
 		        'options' 	=> 
 		        	array(
-		        	 'https://api.iyzipay.com'    => __('Live', 'woocommerce-iyzico'),
+		        	 'https://api.iyzipay.com'    => __('Live', 'iyzico-checkout-for-woocommerce'),
 		        	 'https://sandbox-api.iyzipay.com' => __('Sandbox / Test', 'woocommerce-iyzico')
 		     )),
 		     'api_key' => array(

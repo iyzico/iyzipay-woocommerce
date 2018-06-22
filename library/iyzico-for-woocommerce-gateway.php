@@ -33,15 +33,22 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
             'process_admin_options',
         ) );
         
-                add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array(
+        add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array(
             $this,
             'admin_overlay_script',
         ) );    
 
         add_action('woocommerce_receipt_iyzico', array($this, 'iyzico_loading_bar'));
         add_action('woocommerce_receipt_iyzico', array($this, 'iyzico_payment_form'));
+        
+
+        if(isset($_GET['section']) && $_GET['section'] == 'iyzico') {
+
+            $this->valid_js();
+        }
 
     }
+
 
 
     public function admin_overlay_script() {
@@ -139,8 +146,13 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
 
     }   
 
-    public function init_form_fields() {
+    public function valid_js() {
 
+        wp_enqueue_script('script', plugins_url().IYZICO_PLUGIN_NAME.'/media/js/valid_api.js',true,'1.0','all');
+
+    }
+    public function init_form_fields() {
+        
         $this->form_fields = Iyzico_Checkout_For_WooCommerce_Fields::iyzicoAdminFields();
 
     }
@@ -171,6 +183,9 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
     }
 
     public function iyzico_payment_form($order_id) {
+
+        $this->versionCheck();
+
         global $woocommerce;
 
         $getOrder                  = new WC_Order($order_id);
@@ -209,7 +224,7 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
 
         wp_enqueue_script('script', plugins_url().IYZICO_PLUGIN_NAME.'/media/js/iyzico.js',true,'1.3','all');
 
-        if(isset($requestResponse->checkoutFormContent)) {
+        if(isset($requestResponse->status)) {
             if($requestResponse->status == 'success') {
                 echo $message;
                 echo ' <div style="display:none" id="iyzipay-checkout-form" class='.$className.'>' . $requestResponse->checkoutFormContent . '</div>';
@@ -316,16 +331,8 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
             if (isset($requestResponse->installment) && !empty($requestResponse->installment) && $requestResponse->installment > 1) {
 
 
-                if($requestResponse->price >= $requestResponse->paidPrice) {
-                
-                    $totalPrice         = WC()->session->get('iyzicoOrderTotalAmount');
-                    $installment_fee    = $requestResponse->paidPrice - $totalPrice; 
-
-                } else {
-
-                    $installment_fee    = $requestResponse->paidPrice - $requestResponse->price;
-                }
-
+                $totalPrice         = WC()->session->get('iyzicoOrderTotalAmount');
+                $installment_fee    = $requestResponse->paidPrice - $totalPrice; 
        
                 $order_fee          = new stdClass();
                 $order_fee->id      = 'Installment Fee';
@@ -364,6 +371,17 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
             wp_redirect($redirectUrl);
         }
 
+    }
+
+    private function versionCheck() {
+
+        $phpVersion = phpversion();
+        $requiredVersion = 5.4;
+
+        if($phpVersion < $requiredVersion) {
+            echo 'Required PHP 5.4 and greater for iyzico WooCommerce Payment Gateway';
+            exit;
+        }
     }
 }
 
