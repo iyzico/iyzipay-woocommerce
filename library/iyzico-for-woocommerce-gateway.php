@@ -170,7 +170,7 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
 
     public function iyzico_loading_bar($order_id) {
 
-        wp_enqueue_style( 'style', plugins_url().IYZICO_PLUGIN_NAME.'/media/css/iyzico.css',true,'1.1','all');
+        echo '<style>.loading{width:40px;height:40px;background-color:#4ec8f1;margin:auto;-webkit-animation:sk-rotateplane 1.2s infinite ease-in-out;animation:sk-rotateplane 1.2s infinite ease-in-out}@-webkit-keyframes sk-rotateplane{0%{-webkit-transform:perspective(120px)}50%{-webkit-transform:perspective(120px) rotateY(180deg)}100%{-webkit-transform:perspective(120px) rotateY(180deg) rotateX(180deg)}}@keyframes sk-rotateplane{0%{transform:perspective(120px) rotateX(0) rotateY(0);-webkit-transform:perspective(120px) rotateX(0) rotateY(0)}50%{transform:perspective(120px) rotateX(-180.1deg) rotateY(0);-webkit-transform:perspective(120px) rotateX(-180.1deg) rotateY(0)}100%{transform:perspective(120px) rotateX(-180deg) rotateY(-179.9deg);-webkit-transform:perspective(120px) rotateX(-180deg) rotateY(-179.9deg)}}</style>';
 
         echo '<div id="loadingBar">
                 <div class="loading">
@@ -222,8 +222,8 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
         $className                = $this->get_option('form_class');
         $message                  = '<p id="infoBox" style="display:none;">' . __('Thank you for your order, please click the button below to pay with iyzico Checkout.', 'woocommerce-iyzico') . '</p>';
 
-        wp_enqueue_script('script', plugins_url().IYZICO_PLUGIN_NAME.'/media/js/iyzico.js',true,'1.3','all');
-
+        echo '<script>jQuery(window).load(function(){document.getElementById("loadingBar").style.display="none",document.getElementById("infoBox").style.display="block",document.getElementById("iyzipay-checkout-form").style.display="block"});</script>';
+            
         if(isset($requestResponse->status)) {
             if($requestResponse->status == 'success') {
                 echo $message;
