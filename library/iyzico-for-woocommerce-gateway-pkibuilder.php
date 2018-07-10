@@ -7,7 +7,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Iyzico_Checkout_For_WooCommerce_PkiBuilder {
 
 	public function pkiStringGenerate($objectData) {
-		
+
+
 		$pki_value = "[";
 		foreach ($objectData as $key => $data) {
 
@@ -40,9 +41,12 @@ class Iyzico_Checkout_For_WooCommerce_PkiBuilder {
 				$name = str_replace("'", "", $name); 
 
 				$pki_value .= $name."=[";
+				$end_key = count($data);
+				$count 	 = 0;
 
 				foreach ($data as $key => $result) {
 
+					$count++;
 					$pki_value .= "[";
 					
 					foreach ($result as $key => $item) {
@@ -56,7 +60,7 @@ class Iyzico_Checkout_For_WooCommerce_PkiBuilder {
 						}
 
 						if(end($result) == $item) {
-							if(end($data) != $result) {
+							if($end_key != $count) {
 
 								$pki_value .= "], ";
 							
