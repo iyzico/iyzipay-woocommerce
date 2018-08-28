@@ -28,7 +28,7 @@ class Iyzico_Checkout_For_WooCommerce_FormObjectGenerate {
 		$iyzico->forceThreeDS                 = "0";
 		$iyzico->callbackUrl                  = add_query_arg('wc-api', 'WC_Gateway_Iyzico', $data->get_checkout_order_received_url());
 		$iyzico->cardUserKey                  = $iyziModel->findUserCardKey($user->ID,$apiKey);
-		$iyzico->paymentSource                = 'WOOCOMMERCE|'.WOOCOMMERCE_VERSION.'|CARRERA-1.6';
+		$iyzico->paymentSource                = 'WOOCOMMERCE|'.WOOCOMMERCE_VERSION.'|CARRERA-1.7';
 
 	
 		return $iyzico;
@@ -94,6 +94,7 @@ class Iyzico_Checkout_For_WooCommerce_FormObjectGenerate {
 	public function generateBasketItems($items,$order) {
 
 		$itemSize = count($items);
+
 		if(!$itemSize) {
 
 			return $this->oneProductCalc($order);
@@ -107,21 +108,25 @@ class Iyzico_Checkout_For_WooCommerce_FormObjectGenerate {
 			$product 	= wc_get_product($productId);
 			$realPrice  = $this->helper->realPrice($product->get_sale_price(),$product->get_price());
 
-			$basketItems[$keyNumber] = new stdClass();
+			if($realPrice && $realPrice != '0' && $realPrice != '0.0' && $realPrice != '0.00' && $realPrice != false) {
 
-			$basketItems[$keyNumber]->id                = $item['product_id'];
-			$basketItems[$keyNumber]->price             = $this->helper->priceParser(round($realPrice,2));
-			$basketItems[$keyNumber]->name              = $product->get_title();
-			$basketItems[$keyNumber]->category1         = 'TEST';
-			$basketItems[$keyNumber]->itemType          = 'PHYSICAL';
+				$basketItems[$keyNumber] = new stdClass();
 
-			$keyNumber++;
+				$basketItems[$keyNumber]->id                = $item['product_id'];
+				$basketItems[$keyNumber]->price             = $this->helper->priceParser(round($realPrice,2));
+				$basketItems[$keyNumber]->name              = $product->get_title();
+				$basketItems[$keyNumber]->category1         = 'TEST';
+				$basketItems[$keyNumber]->itemType          = 'PHYSICAL';
+
+				$keyNumber++;
+
+			}
 
 		}
 
 		$shipping = $order->get_total_shipping() + $order->get_shipping_tax();
 
-		if($shipping) {
+		if($shipping && $shipping != '0' && $shipping != '0.0' && $shipping != '0.00' && $shipping != false) {
 
 			$endKey = count($basketItems);
 
@@ -148,7 +153,7 @@ class Iyzico_Checkout_For_WooCommerce_FormObjectGenerate {
 		$basketItems[$keyNumber]->id                = $order->get_id();
 		$basketItems[$keyNumber]->price             = $this->helper->priceParser(round($order->get_total(), 2));
 		$basketItems[$keyNumber]->name              = 'Woocommerce - Custom Order Page';
-		$basketItems[$keyNumber]->category1         = 'TEST';
+		$basketItems[$keyNumber]->category1         = 'Custom Order Page';
 		$basketItems[$keyNumber]->itemType          = 'PHYSICAL';
 
 		return $basketItems;
