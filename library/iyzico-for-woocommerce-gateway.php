@@ -32,15 +32,15 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
             $this,
             'process_admin_options',
         ) );
-        
+
         add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array(
             $this,
             'admin_overlay_script',
-        ) );    
+        ) );
 
         add_action('woocommerce_receipt_iyzico', array($this, 'iyzico_loading_bar'));
         add_action('woocommerce_receipt_iyzico', array($this, 'iyzico_payment_form'));
-        
+
 
         if(isset($_GET['section']) && $_GET['section'] == 'iyzico') {
 
@@ -74,42 +74,42 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
         $iyzicoJson               = json_encode($overlayObject,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE);
 
         $requestResponse          = $iyzicoRequest->iyzicoOverlayScriptRequest($baseUrl,$iyzicoJson,$authorizationData);
-    
+
 
         $iyzicoOverlayToken    = get_option('iyzico_overlay_token');
         $iyzicoOverlayPosition = get_option('iyzico_overlay_position');
 
         if(isset($requestResponse->protectedShopId)) {
-         
-            $requestResponse->protectedShopId = esc_js($requestResponse->protectedShopId);    
+
+            $requestResponse->protectedShopId = esc_js($requestResponse->protectedShopId);
 
             if(empty($iyzicoOverlayToken) && empty($iyzicoOverlayPosition)) {
 
-                add_option('iyzico_overlay_token',$requestResponse->protectedShopId,'','yes'); 
-                add_option('iyzico_overlay_position',$this->settings['overlay_script'],'','yes'); 
+                add_option('iyzico_overlay_token',$requestResponse->protectedShopId,'','yes');
+                add_option('iyzico_overlay_position',$this->settings['overlay_script'],'','yes');
 
             } else {
 
-                update_option('iyzico_overlay_token',$requestResponse->protectedShopId); 
-                update_option('iyzico_overlay_position',$this->settings['overlay_script']);   
-            } 
-        
+                update_option('iyzico_overlay_token',$requestResponse->protectedShopId);
+                update_option('iyzico_overlay_position',$this->settings['overlay_script']);
+            }
+
         } else {
-           
-            if(empty($iyzicoOverlayPosition)) { 
-                
-                add_option('iyzico_overlay_position',$this->settings['overlay_script'],'','yes'); 
-                
+
+            if(empty($iyzicoOverlayPosition)) {
+
+                add_option('iyzico_overlay_position',$this->settings['overlay_script'],'','yes');
+
             } else {
 
-                update_option('iyzico_overlay_position',$this->settings['overlay_script']);   
-           
+                update_option('iyzico_overlay_position',$this->settings['overlay_script']);
+
             }
 
         }
-        
+
         return true;
-        
+
     }
 
     public function admin_options() {
@@ -132,7 +132,7 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
 
         $overlayScript = false;
 
-    if($activePlugins['enabled'] != 'no') { 
+    if($activePlugins['enabled'] != 'no') {
         if($position != 'hide' && !empty($token)) {
 
             $overlayScript = "<script> window.iyz = { token:'".$token."', position:'".$position."',ideaSoft: false};</script>
@@ -141,10 +141,10 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
     }
 
         echo $overlayScript;
-        
 
 
-    }   
+
+    }
 
     public function valid_js() {
 
@@ -152,13 +152,13 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
 
     }
     public function init_form_fields() {
-        
+
         $this->form_fields = Iyzico_Checkout_For_WooCommerce_Fields::iyzicoAdminFields();
 
     }
 
     public function process_payment($order_id) {
-        
+
         $order = wc_get_order($order_id);
 
         return array(
@@ -179,7 +179,7 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
                     <p style="text-align:center;color:#4ec8f1;">iyzico</p>
                 </div>
              </div>';
-        
+
     }
 
     public function iyzico_payment_form($order_id) {
@@ -214,16 +214,16 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
         $orderObject              = $pkiBuilder->createFormObjectSort($iyzico);
         $pkiString                = $pkiBuilder->pkiStringGenerate($orderObject);
         $authorizationData        = $pkiBuilder->authorizationGenerate($pkiString,$apiKey,$secretKey,$rand);
-        
+
 
         $iyzicoJson               = json_encode($iyzico,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE);
- 
+
         $requestResponse          = $iyzicoRequest->iyzicoCheckoutFormRequest($baseUrl,$iyzicoJson,$authorizationData);
         $className                = $this->get_option('form_class');
         $message                  = '<p id="infoBox" style="display:none;">' . __('Thank you for your order, please click the button below to pay with iyzico Checkout.', 'woocommerce-iyzico') . '</p>';
 
         echo '<script>jQuery(window).on("load", function(){document.getElementById("loadingBar").style.display="none",document.getElementById("infoBox").style.display="block",document.getElementById("iyzipay-checkout-form").style.display="block"});</script>';
-            
+
         if(isset($requestResponse->status)) {
             if($requestResponse->status == 'success') {
                 echo $message;
@@ -248,9 +248,9 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
             if(!$_POST['token']) {
 
                throw new \Exception("Token not found");
-            
+
             }
-            
+
             $conversationId  = WC()->session->get('iyzicoConversationId');
             $customerId      = WC()->session->get('iyzicoCustomerId');
             $orderId         = $conversationId;
@@ -264,9 +264,9 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
             $secretKey       = $this->settings['secret_key'];
             $baseUrl         = $this->settings['api_type'];
             $rand            = rand(1,99999);
-            
 
-            
+
+
             $iyziModel       = new Iyzico_Checkout_For_WooCommerce_Model();
 
 
@@ -284,15 +284,15 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
             $iyzicoLocalOrder->paymentId     = !empty($requestResponse->paymentId) ? (int) $requestResponse->paymentId : '';
             $iyzicoLocalOrder->orderId       = $orderId;
             $iyzicoLocalOrder->totalAmount   = !empty($requestResponse->paidPrice) ? (float) $requestResponse->paidPrice : '';
-            $iyzicoLocalOrder->status        = $requestResponse->paymentStatus; 
+            $iyzicoLocalOrder->status        = $requestResponse->paymentStatus;
 
             $iyzico_order_insert  = $iyziModel->insertIyzicoOrder($iyzicoLocalOrder);
-     
+
             if($requestResponse->paymentStatus != 'SUCCESS' || $requestResponse->status != 'success' || $orderId != $requestResponse->basketId ) {
 
                 if($requestResponse->status == 'success' && $requestResponse->paymentStatus == 'FAILURE') {
                     throw new Exception('Kartınız için 3D  güvenliği onaylanmamıştır.');
-                    
+
                 }
                 /* Redirect Error */
                 $errorMessage = isset($requestResponse->errorMessage) ? $requestResponse->errorMessage : 'Failed';
@@ -302,9 +302,9 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
 
             /* Save Card */
             if(isset($requestResponse->cardUserKey)) {
-                
+
                 if($customerId) {
-                    
+
                     $cardUserKey = $iyziModel->findUserCardKey($customerId,$apiKey);
 
                     if($requestResponse->cardUserKey != $cardUserKey) {
@@ -312,16 +312,16 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
                         $insertCardUserKey = $iyziModel->insertCardUserKey($customerId,$requestResponse->cardUserKey,$apiKey);
 
                     }
-                    
-                }   
-            
+
+                }
+
             }
 
             $order = new WC_Order($requestResponse->basketId);
-            
+
             $orderMessage = 'Payment ID: '.$requestResponse->paymentId;
             $order->add_order_note($orderMessage,0,true);
-            
+
             if($baseUrl == 'https://sandbox-api.iyzipay.com') {
 
                 $orderMessage = '<strong><p style="color:red">TEST ÖDEMESİ</a></strong>';
@@ -332,8 +332,8 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
 
 
                 $totalPrice         = WC()->session->get('iyzicoOrderTotalAmount');
-                $installment_fee    = $requestResponse->paidPrice - $totalPrice; 
-       
+                $installment_fee    = $requestResponse->paidPrice - $totalPrice;
+
                 $order_fee          = new stdClass();
                 $order_fee->id      = 'Installment Fee';
                 $order_fee->name    = __('Installment Fee', 'woocommerce-iyzico');
@@ -342,7 +342,7 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
                 $fee_id = $order->add_fee($order_fee);
                 $order->calculate_totals(true);
 
-             
+
 
                 update_post_meta($order_id, 'iyzico_no_of_installment',$requestResponse->installment);
                 update_post_meta($order_id, 'iyzico_installment_fee', $installment_fee);
@@ -354,16 +354,15 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
             WC()->session->set('iyzicoOrderTotalAmount',null);
 
             $order->payment_complete();
-            $order->update_status('processing');
             $woocommerce->cart->empty_cart();
 
             $checkoutOrderUrl = $order->get_checkout_order_received_url();
 
             $redirectUrl = add_query_arg(array('msg' => 'Thank You', 'type' => 'woocommerce-message'), $checkoutOrderUrl);
             wp_redirect($redirectUrl);
-            
+
         } catch (Exception $e) {
-    
+
             $respMsg = $e->getMessage();
 
             wc_add_notice(__($respMsg, 'woocommerce-message'), 'error');
