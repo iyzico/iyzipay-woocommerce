@@ -21,6 +21,7 @@
 # Additional Features
 ---------------------
 * Payment Support for manually created orders via admin panel
+* Order Status Support
 
 # Notes
 ---------------
