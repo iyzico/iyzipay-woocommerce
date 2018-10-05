@@ -73,5 +73,35 @@ msgstr "Siparişiniz için teşekkür ederiz, iyzico ile ödemek için aşağıd
 msgid "Pay With Card"
 msgstr "Kredi/Banka Kartı ile Öde"
 
+msgid "Order Status"
+msgstr "Sipariş Durumu"
+
+msgid "Recommended, Default"
+msgstr "Önerilen, Varsayılan"
+
 msgid "Siparişi onayla"
 msgstr "Kredi/Banka Kartı ile Öde"
+
+msgid "Default"
+msgstr "Varsayılan"
+
+msgid "Pending"
+msgstr "Ödeme Bekleniyor"
+
+msgid "Processing"
+msgstr "İşleniyor"
+
+msgid "On-Hold"
+msgstr "Beklemede"
+
+msgid "Completed"
+msgstr "Tamamlandı"
+
+msgid "Cancelled"
+msgstr "İptal Edildi"
+
+msgid "Refunded"
+msgstr "İade Edildi"
+
+msgid "Failed"
+msgstr "Başarısız"
