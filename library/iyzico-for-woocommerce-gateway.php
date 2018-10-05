@@ -353,8 +353,6 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
             WC()->session->set('iyzicoCustomerId',null);
             WC()->session->set('iyzicoOrderTotalAmount',null);
 
-            $order->payment_complete();
-
             /* Order Status */
             $orderStatus = $this->settings['order_status'];
             
@@ -362,6 +360,7 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
                 $order->update_status($orderStatus);
             }
 
+            $order->payment_complete();
             $woocommerce->cart->empty_cart();
 
             $checkoutOrderUrl = $order->get_checkout_order_received_url();
