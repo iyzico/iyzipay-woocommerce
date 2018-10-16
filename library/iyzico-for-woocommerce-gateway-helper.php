@@ -51,7 +51,11 @@ class Iyzico_Checkout_For_WooCommerce_Helper {
 
 		$locale = explode('_',$locale);
 		$locale = $locale[0];
-
+		// Check for support locales and return 'en' for non supported locales
+		$supported_locals = ['en', 'tr'];
+		if( !in_array($locale, $supported_locals) ){
+			return 'en';
+		}
 		return $locale;
 	}
 
