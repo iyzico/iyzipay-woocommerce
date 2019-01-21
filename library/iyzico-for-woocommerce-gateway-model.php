@@ -3,11 +3,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-
 class Iyzico_Checkout_For_WooCommerce_Model {
 
 	public function __construct() {
-
+		
 		$this->database = $GLOBALS['wpdb'];
 	}
 
@@ -63,8 +62,8 @@ class Iyzico_Checkout_For_WooCommerce_Model {
 		$insertOrder = $this->database->insert( 
 			$this->database->prefix.'iyzico_order', 
 			array( 
-				'payment_id' 	=> $localOrder->orderId, 
-				'order_id' 		=> $localOrder->paymentId, 
+				'payment_id' 	=> $localOrder->paymentId, 
+				'order_id' 		=> $localOrder->orderId, 
 				'total_amount' 	=> $localOrder->totalAmount,
 				'status' 		=> $localOrder->status
 			), 
@@ -78,6 +77,33 @@ class Iyzico_Checkout_For_WooCommerce_Model {
 
 		return $insertOrder;
 
+	}
+
+	public function findPaymentId($orderId) {
+
+		$table_name = $this->database->prefix .'iyzico_order';
+		$fieldName  = 'payment_id';
+
+		$paymentStatus = 'SUCCESS';
+		
+		$query = $this->database->prepare("
+				 	SELECT {$fieldName} FROM {$table_name} 
+				 	WHERE  order_id = %d AND status = %s ORDER BY iyzico_order_id DESC LIMIT 1;
+					",$orderId,$paymentStatus
+				);
+
+		$result = $this->database->get_col($query);
+
+
+		if(isset($result[0])) {
+
+			return $result[0];
+
+		} else {
+
+			return '';
+		}
+	
 	}
 
 

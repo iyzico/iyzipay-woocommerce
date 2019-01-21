@@ -28,7 +28,7 @@ class Iyzico_Checkout_For_WooCommerce_FormObjectGenerate {
 		$iyzico->forceThreeDS                 = "0";
 		$iyzico->callbackUrl                  = add_query_arg('wc-api', 'WC_Gateway_Iyzico', $data->get_checkout_order_received_url());
 		$iyzico->cardUserKey                  = $iyziModel->findUserCardKey($user->ID,$apiKey);
-		$iyzico->paymentSource                = 'WOOCOMMERCE|'.WOOCOMMERCE_VERSION.'|CARRERA-1.1.0';
+		$iyzico->paymentSource                = 'WOOCOMMERCE|'.WOOCOMMERCE_VERSION.'|CARRERA-1.1.1';
 
 	
 		return $iyzico;
@@ -158,8 +158,4 @@ class Iyzico_Checkout_For_WooCommerce_FormObjectGenerate {
 
 		return $basketItems;
 	}
-
-
-
-
 }
