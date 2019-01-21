@@ -3,7 +3,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-
 class Iyzico_Checkout_For_WooCommerce_iyzicoRequest {
 
 	
