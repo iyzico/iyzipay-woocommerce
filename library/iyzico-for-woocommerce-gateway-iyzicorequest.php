@@ -11,7 +11,6 @@ class Iyzico_Checkout_For_WooCommerce_iyzicoRequest {
 			$url = $baseUrl.'/payment/iyzipos/checkoutform/initialize/auth/ecom';
 				 
 		    return $this->curlPost($json,$authorizationData,$url);
-
 	}
 
 	public function iyzicoCheckoutFormDetailRequest($baseUrl,$json,$authorizationData) {
@@ -19,7 +18,6 @@ class Iyzico_Checkout_For_WooCommerce_iyzicoRequest {
 			$url = $baseUrl.'/payment/iyzipos/checkoutform/auth/ecom/detail';
 				 
 		    return $this->curlPost($json,$authorizationData,$url);
-
 	}
 
 
@@ -28,9 +26,14 @@ class Iyzico_Checkout_For_WooCommerce_iyzicoRequest {
 			$baseUrl   = "https://iyziup.iyzipay.com/";
 			$url   	   = $baseUrl."v1/iyziup/protected/shop/detail/overlay-script";
 
+		    return $this->curlPost($json,$authorizationData,$url);
+	}
+
+	public function iyzicoCargoTracking($baseUrl,$json,$authorizationData) {
+
+			$url = $baseUrl.'/v1/iyziup/create-zen-order-shipment-over-plugin-framework';
 
 		    return $this->curlPost($json,$authorizationData,$url);
-
 	}
 
 

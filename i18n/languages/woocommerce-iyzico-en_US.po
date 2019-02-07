@@ -1,5 +1,5 @@
 msgid ""
-msgsen ""
+msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
@@ -10,65 +10,98 @@ msgsen ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.8.11\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"Language: en_US\n"
+"Language: tr_TR\n"
 
 # This file is distributed under the GNU General Public License v2 or later.
 msgid "Api Type"
-msgsen "Api Type"
+msgstr "Api Type"
 
 msgid "Api Key"
-msgsen "Api Key"
+msgstr "Api Key"
 
 msgid "Secret Key"
-msgsen "Secret Key"
+msgstr "Secret Key"
 
 msgid "Payment Value"
-msgsen "Payment Value"
+msgstr "Payment Value""
 
 msgid "Payment Value Message"
-msgstr "Online Payment"
+msgstr "Payment Value Message"
 
 msgid "Payment Form Description Value"
-msgsen "Payment Form Description Value"
+msgstr "Payment Form Description Value""
 
 msgid "Enable/Disable"
-msgsen "Enable/Disable"
+msgstr "Enable/Disable"
 
 msgid "Enable iyzico checkout"
-msgsen "Enable iyzico checkout"
+msgstr "Enable iyzico checkout"
 
 msgid "Payment Form Design"
-msgsen "Payment Form Design"
+msgstr "Payment Form Design"
 
 
 msgid "Left"
-msgsen "Bottom Left"
+msgstr "Bottom Left"
 
 msgid "Right"
-msgsen "Bottom Right"
+msgstr "Bottom Right"
 
 msgid "Hide"
-msgsen "Hide"
+msgstr "Hide"
 
 msgid "Overlay Script"
-msgsen "Overlay Script"
+msgstr "Overlay Script"
 
 
 msgid "Installment"
-msgsen "Installment"
+msgstr "Installment"
 
 msgid "Installment Fee"
-msgsen "Installment Fee"
+msgstr "Installment Fee"
 
 msgid "This message will show to the user during checkout."
-msgsen "This message will show to the user during checkout.."
+msgstr "This message will show to the user during checkout."
 
 
 msgid "Pay with your credit card via iyzico."
-msgsen "Pay with your credit card via iyzico."
+msgstr "Pay with your credit card via iyzico."
 
 msgid "Thank you for your order, please click the button below to pay with iyzico Checkout."
-msgsen "Thank you for your order, please click the button below to pay with iyzico Checkout."
+msgstr "Thank you for your order, please click the button below to pay with iyzico Checkout."
 
 msgid "Pay With Card"
-msgsen "Pay With Card"
+msgstr "Pay with Credit/Bank Card"
+
+msgid "Order Status"
+msgstr "Order Status"
+
+msgid "Recommended, Default"
+msgstr "Recommended, Default"
+
+msgid "Siparişi onayla"
+msgstr "Pay with Credit/Bank Card"
+
+msgid "Default"
+msgstr "Default"
+
+msgid "Pending"
+msgstr "Pending"
+
+msgid "Processing"
+msgstr "Processing"
+
+msgid "On-Hold"
+msgstr "On-Hold"
+
+msgid "Completed"
+msgstr "Completed"
+
+msgid "Cancelled"
+msgstr "Cancelled"
+
+msgid "Refunded"
+msgstr "Refunded"
+
+msgid "Failed"
+msgstr "Failed"
