@@ -61,11 +61,11 @@ class Iyzico_Checkout_For_WooCommerce_Buyer_Protection {
 
     public static function iyziCargoTrackingSave($order_id) {
 
-        $cargoNumber = $_POST['cargoNumber'];
-        $cargoTrackingNumber = $_POST['cargoTrackingNumber'];
+        $cargoNumber = esc_sql($_POST['cargoNumber']);
+        $cargoTrackingNumber = esc_sql($_POST['cargoTrackingNumber']);
         $createOrUpdateControl = false;
 
-        /* Empty Check Control */
+        /* Empty Post  Control */
         if(empty($cargoNumber) || empty($cargoTrackingNumber)) {
 
             return;
@@ -77,7 +77,7 @@ class Iyzico_Checkout_For_WooCommerce_Buyer_Protection {
         $cargoNumberOption = get_option($cargoNumberField);
 
 
-        /* Sleep Data Check */
+        /* Sleeping Data Control */
         if($cargoNumber == $cargoNumberOption && $cargoTrackingNumber == $cargoTrackingOption) {
 
             return;
@@ -112,7 +112,7 @@ class Iyzico_Checkout_For_WooCommerce_Buyer_Protection {
 
         $iyzicoJson = json_encode($cargoObject,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE);
         $requestResponse = $iyzicoRequest->iyzicoCargoTracking($baseUrl,$iyzicoJson,$authorizationData);
-        
+
         if(isset($requestResponse->status)) {
 
             if($requestResponse->status == 'success') {
