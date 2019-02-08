@@ -15,7 +15,8 @@ class Iyzico_Checkout_For_WooCommerce_Buyer_Protection {
         $currentOrderStatus = $order->get_status();
         $orderStatusArray = array('processing','on-hold','completed');
         $orderStatus = in_array($currentOrderStatus,$orderStatusArray);
-        
+        $paymentMethod = $order->get_payment_method();
+
         $cargoObject[0] = new stdClass();
         $cargoObject[0]->name = 'MNG Kargo';
         $cargoObject[0]->value = '1';
@@ -38,7 +39,7 @@ class Iyzico_Checkout_For_WooCommerce_Buyer_Protection {
 
         $pluginUrl = plugins_url().IYZICO_PLUGIN_NAME;
         ?>
-            <?php if($orderStatus): ?> 
+            <?php if($orderStatus && $paymentMethod == 'iyzico'): ?> 
 
                 <h1>iyzico Korumalı Alışveriş</h1>
                 <img src="<?php echo $pluginUrl; ?>/image/protected_zihni.png" style="float:right;"/>
@@ -111,7 +112,7 @@ class Iyzico_Checkout_For_WooCommerce_Buyer_Protection {
 
         $iyzicoJson = json_encode($cargoObject,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE);
         $requestResponse = $iyzicoRequest->iyzicoCargoTracking($baseUrl,$iyzicoJson,$authorizationData);
-
+        
         if(isset($requestResponse->status)) {
 
             if($requestResponse->status == 'success') {
@@ -129,8 +130,7 @@ class Iyzico_Checkout_For_WooCommerce_Buyer_Protection {
             
             } else {
 
-                echo $requestResponse->errorMessage;
-                exit;
+                return;
             }
         }
 
