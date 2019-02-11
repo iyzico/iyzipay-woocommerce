@@ -50,10 +50,11 @@ class Iyzico_Checkout_For_WooCommerce_Buyer_Protection {
         ?>
             <?php if($protectedControl && $orderStatus && $paymentMethod == 'iyzico'): ?> 
 
-                <h1>iyzico Korumalı Alışveriş</h1>
-                <img src="<?php echo $pluginUrl; ?>/image/protected_zihni.png" style="float:right;"/>
-                <h3 style="float:left;">Kargo Bilgi Ekranı</h3>
-                <select name="cargoNumber" style="width: 100%;">
+                
+                <h3>iyzico Korumalı Alışveriş Kargo Takibi</h3>
+                <p>Siparişin kargo takip numarasını girerek, müşterinizin anlık kargo takibi yapmasını sağlayabilirsiniz.</p>
+                <p style="font-weight:bold;margin-bottom:0px !important;">Kargo Firması</p>
+                <select name="cargoNumber" style="width: 80%;">
                         <option value="">Seçiniz</option>
                     <?php foreach ($cargoObject as $key => $cargo): ?>
                         <option value="<?php echo $cargo->value; ?>" <?php if($cargo->value == (int) $cargoNumber) { echo 'selected';}?>>
@@ -61,9 +62,8 @@ class Iyzico_Checkout_For_WooCommerce_Buyer_Protection {
                         </option>
                     <?php endforeach; ?>
                 </select>
-                <br>
-                <br>
-                <input type="text" style="width: 100%;" name="cargoTrackingNumber" value="<?php echo $cargoTrackingNumber; ?>" placeholder="Kargo numarası:" />
+                <p style="font-weight:bold;margin-bottom:0px !important;">Kargo Takip Numarası</p>
+                <input type="text" style="width: 80%;" name="cargoTrackingNumber" value="<?php echo $cargoTrackingNumber; ?>" placeholder="Kargo numarası:" />
             <?php endif; ?>
         <?php
     }
