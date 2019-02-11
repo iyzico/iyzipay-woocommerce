@@ -17,25 +17,20 @@ class Iyzico_Checkout_For_WooCommerce_Buyer_Protection {
         $orderStatus = in_array($currentOrderStatus,$orderStatusArray);
         $paymentMethod = $order->get_payment_method();
 
-        $cargoObject[0] = new stdClass();
-        $cargoObject[0]->name = 'MNG Kargo';
-        $cargoObject[0]->value = '1';
+        /* Cargo Object */
+        $cargoArray = array(array('name' => 'MNG Kargo', 'value' => 1),
+                            array('name' => 'Aras Kargo', 'value' => 4),
+                            array('name' => 'Yurtiçi Kargo', 'value' => 6),
+                            array('name' => 'UPS Kargo', 'value' => 10),
+                            array('name' => 'Sürat Kargo', 'value' => 15));
 
-        $cargoObject[1] = new stdClass();
-        $cargoObject[1]->name = 'Aras Kargo';
-        $cargoObject[1]->value = '2';
 
-        $cargoObject[2] = new stdClass();
-        $cargoObject[2]->name = 'Yurtiçi Kargo';
-        $cargoObject[2]->value = '3';
+        foreach ($cargoArray as $key => $cargo) {
 
-        $cargoObject[3] = new stdClass();
-        $cargoObject[3]->name = 'UPS Kargo';
-        $cargoObject[3]->value = '4';
-
-        $cargoObject[4] = new stdClass();
-        $cargoObject[4]->name = 'Sürat Kargo';
-        $cargoObject[4]->value = '5';
+            $cargoObject[$key] = new stdClass();
+            $cargoObject[$key]->name = $cargo['name'];
+            $cargoObject[$key]->value = $cargo['value'];
+        }
 
         $pluginUrl = plugins_url().IYZICO_PLUGIN_NAME;
         ?>
