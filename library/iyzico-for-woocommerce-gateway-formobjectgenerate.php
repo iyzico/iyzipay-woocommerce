@@ -160,10 +160,6 @@ class Iyzico_Checkout_For_WooCommerce_FormObjectGenerate {
 	}
 
 	public function generateCargoTracking($trackingNumber,$paymentId,$shippingCompanyId) {
-
-		/* 
-			createOrUpdateControl
-		*/
 			
 		$cargoObject = new stdClass();
 

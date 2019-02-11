@@ -7,8 +7,10 @@ class Iyzico_Checkout_For_WooCommerce_Buyer_Protection {
 
     public static function iyziCargoTracking($order) {
 
-        $cargoCodeValue = 'iyzico_cargo_no_'.$order->get_id();
-        $cargoNameValue = 'iyzico_cargo_name_'.$order->get_id();
+        $orderId = (int) $order->get_id();
+
+        $cargoCodeValue = 'iyzico_cargo_no_'.$orderId;
+        $cargoNameValue = 'iyzico_cargo_name_'.$orderId;
 
         $cargoTrackingNumber = get_option($cargoCodeValue);
         $cargoNumber = get_option($cargoNameValue);
@@ -16,13 +18,25 @@ class Iyzico_Checkout_For_WooCommerce_Buyer_Protection {
         $orderStatusArray = array('processing','on-hold','completed');
         $orderStatus = in_array($currentOrderStatus,$orderStatusArray);
         $paymentMethod = $order->get_payment_method();
+        $protectedControl = get_option('iyzico_overlay_token');
+
+        /* Payment Gateways */
+        $gateway_controller = WC_Payment_Gateways::instance();
+        $all_gateways  = $gateway_controller->payment_gateways();
+        $iyzico  = $all_gateways['iyzico']->settings;
+        $apiType = $iyzico['api_type'];
+
+        if($apiType == 'https://sandbox-api.iyzipay.com') {
+            $protectedControl = true;
+        }
 
         /* Cargo Object */
         $cargoArray = array(array('name' => 'MNG Kargo', 'value' => 1),
                             array('name' => 'Aras Kargo', 'value' => 4),
                             array('name' => 'Yurtiçi Kargo', 'value' => 6),
                             array('name' => 'UPS Kargo', 'value' => 10),
-                            array('name' => 'Sürat Kargo', 'value' => 15));
+                            array('name' => 'Sürat Kargo', 'value' => 15)
+                        );
 
 
         foreach ($cargoArray as $key => $cargo) {
@@ -34,7 +48,7 @@ class Iyzico_Checkout_For_WooCommerce_Buyer_Protection {
 
         $pluginUrl = plugins_url().IYZICO_PLUGIN_NAME;
         ?>
-            <?php if($orderStatus && $paymentMethod == 'iyzico'): ?> 
+            <?php if($protectedControl && $orderStatus && $paymentMethod == 'iyzico'): ?> 
 
                 <h1>iyzico Korumalı Alışveriş</h1>
                 <img src="<?php echo $pluginUrl; ?>/image/protected_zihni.png" style="float:right;"/>
@@ -56,6 +70,8 @@ class Iyzico_Checkout_For_WooCommerce_Buyer_Protection {
 
     public static function iyziCargoTrackingSave($order_id) {
 
+        $orderId = (int) $order_id;
+
         $cargoNumber = esc_sql($_POST['cargoNumber']);
         $cargoTrackingNumber = esc_sql($_POST['cargoTrackingNumber']);
         $createOrUpdateControl = false;
@@ -66,8 +82,8 @@ class Iyzico_Checkout_For_WooCommerce_Buyer_Protection {
             return;
         }
 
-        $cargoTrackingField = 'iyzico_cargo_no_'.$order_id;
-        $cargoNumberField = 'iyzico_cargo_name_'.$order_id;
+        $cargoTrackingField = 'iyzico_cargo_no_'.$orderId;
+        $cargoNumberField = 'iyzico_cargo_name_'.$orderId;
         $cargoTrackingOption = get_option($cargoTrackingField);
         $cargoNumberOption = get_option($cargoNumberField);
 
@@ -92,7 +108,7 @@ class Iyzico_Checkout_For_WooCommerce_Buyer_Protection {
         $randNumer = rand(1,99999);
 
         $iyziModel  = new Iyzico_Checkout_For_WooCommerce_Model();
-        $paymentId = $iyziModel->findPaymentId($order_id);
+        $paymentId = $iyziModel->findPaymentId($orderId);
 
         /* Post iyzico */
         $formObjectGenerate = new Iyzico_Checkout_For_WooCommerce_FormObjectGenerate();
