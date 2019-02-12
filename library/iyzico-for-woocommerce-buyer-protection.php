@@ -51,19 +51,19 @@ class Iyzico_Checkout_For_WooCommerce_Buyer_Protection {
             <?php if($protectedControl && $orderStatus && $paymentMethod == 'iyzico'): ?> 
 
                 
-                <h3>iyzico Korumalı Alışveriş Kargo Takibi</h3>
-                <p>Siparişin kargo takip numarasını girerek, müşterinizin anlık kargo takibi yapmasını sağlayabilirsiniz.</p>
-                <p style="font-weight:bold;margin-bottom:0px !important;">Kargo Firması</p>
+                <h3><?php echo __('iyzico Protected Shopping Shipping Tracking', 'woocommerce-iyzico'); ?></h3>
+                <p><?php echo __('By entering the shipping tracking number of this order, you can ensure your customer have real time order tracking.', 'woocommerce-iyzico'); ?></p>
+                <p style="font-weight:bold;margin-bottom:0px !important;"><?php echo __('Shipping Company', 'woocommerce-iyzico'); ?></p>
                 <select name="cargoNumber" style="width: 80%;">
-                        <option value="">Seçiniz</option>
+                        <option value=""><?php  echo __('Select', 'woocommerce-iyzico'); ?></option>
                     <?php foreach ($cargoObject as $key => $cargo): ?>
                         <option value="<?php echo $cargo->value; ?>" <?php if($cargo->value == (int) $cargoNumber) { echo 'selected';}?>>
                             <?php echo $cargo->name; ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
-                <p style="font-weight:bold;margin-bottom:0px !important;">Kargo Takip Numarası</p>
-                <input type="text" style="width: 80%;" name="cargoTrackingNumber" value="<?php echo $cargoTrackingNumber; ?>" placeholder="Kargo numarası:" />
+                <p style="font-weight:bold;margin-bottom:0px !important;"><?php echo __('Shipping Tracking Number', 'woocommerce-iyzico'); ?></p>
+                <input type="text" style="width: 80%;" name="cargoTrackingNumber" value="<?php echo $cargoTrackingNumber; ?>" placeholder="<?php echo __('Shipping Tracking Number', 'woocommerce-iyzico'); ?>" />
             <?php endif; ?>
         <?php
     }
