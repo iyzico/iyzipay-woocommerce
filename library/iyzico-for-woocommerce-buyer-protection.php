@@ -116,6 +116,10 @@ class Iyzico_Checkout_For_WooCommerce_Buyer_Protection {
         $iyzicoRequest = new Iyzico_Checkout_For_WooCommerce_iyzicoRequest();
         $baseUrl = $iyzico['api_type'];
 
+        if($baseUrl == 'https://api.iyzipay.com') {
+            $baseUrl = 'https://iyziup.iyzipay.com';
+        }
+
         $cargoObject = $formObjectGenerate->generateCargoTracking($cargoTrackingNumber,$paymentId,$cargoNumber);
         $pkiString = $pkiBuilder->pkiStringGenerate($cargoObject);
         $authorizationData = $pkiBuilder->authorizationGenerate($pkiString,$apiKey,$secretKey,$randNumer);
