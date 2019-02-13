@@ -40,7 +40,6 @@ msgstr "iyzico ile ödemeyi etkinleştir"
 msgid "Payment Form Design"
 msgstr "Ödeme Formu Görünümü"
 
-
 msgid "Left"
 msgstr "Alt Sol"
 
@@ -105,3 +104,18 @@ msgstr "İade Edildi"
 
 msgid "Failed"
 msgstr "Başarısız"
+
+msgid "iyzico Protected Shopping, Shipping Tracking"
+msgstr "iyzico Korumalı Alışveriş, Kargo Takibi"
+
+msgid "By entering the shipping tracking number of this order, you can ensure your customer have real time order tracking."
+msgstr "Siparişin kargo takip numarasını girerek, müşterinizin anlık kargo takibi yapmasını sağlayabilirsiniz."
+
+msgid "Select"
+msgstr "Seçiniz"
+
+msgid "Shipping Company"
+msgstr "Kargo Firması"
+
+msgid "Shipping Tracking Number"
+msgstr "Kargo Takip Numarası"

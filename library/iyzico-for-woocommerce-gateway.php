@@ -9,7 +9,7 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
     public function __construct() {
 
         $this->id = 'iyzico';
-        $this->iyziV = '1.1.2';
+        $this->iyziV = '1.1.3';
         $this->method_title = __('iyzico', 'woocommerce-iyzico');
         $this->method_description = __('Easy Checkout');
         $this->has_fields = true;
@@ -22,7 +22,7 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
         $this->title        = $this->get_option( 'title' );
         $this->description  = $this->get_option( 'description' );
         $this->enabled      = $this->get_option( 'enabled' );
-        $this->icon         = plugins_url().IYZICO_PLUGIN_NAME.'/image/cards.png';
+        $this->icon         = plugins_url().IYZICO_PLUGIN_NAME.'/image/cards.png?v='.$this->iyziV.'';
 
         add_action('init', array(&$this, 'iyzico_response'));
         add_action('woocommerce_api_wc_gateway_iyzico', array($this, 'iyzico_response'));
@@ -222,7 +222,6 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
         global $woocommerce;
 
         try {
-
 
             if(!$_POST['token']) {
 
@@ -445,6 +444,6 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
         curl_close($curl);
 
         return $response;
-    }   
+    }
 }
 
