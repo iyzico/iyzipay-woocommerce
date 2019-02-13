@@ -106,8 +106,8 @@ msgstr "Refunded"
 msgid "Failed"
 msgstr "Failed"
 
-msgid "iyzico Protected Shopping Shipping Tracking"
-msgstr "iyzico Protected Shopping Shipping Tracking"
+msgid "iyzico Protected Shopping, Shipping Tracking"
+msgstr "iyzico Protected Shopping, Shipping Tracking"
 
 msgid "By entering the shipping tracking number of this order, you can ensure your customer have real time order tracking."
 msgstr "By entering the shipping tracking number of this order, you can ensure your customer have real time order tracking."

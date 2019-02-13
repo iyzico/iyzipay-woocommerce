@@ -51,7 +51,7 @@ class Iyzico_Checkout_For_WooCommerce_Buyer_Protection {
             <?php if($protectedControl && $orderStatus && $paymentMethod == 'iyzico'): ?> 
 
                 
-                <h3><?php echo __('iyzico Protected Shopping Shipping Tracking', 'woocommerce-iyzico'); ?></h3>
+                <h3><?php echo __('iyzico Protected Shopping, Shipping Tracking', 'woocommerce-iyzico'); ?></h3>
                 <p><?php echo __('By entering the shipping tracking number of this order, you can ensure your customer have real time order tracking.', 'woocommerce-iyzico'); ?></p>
                 <p style="font-weight:bold;margin-bottom:0px !important;"><?php echo __('Shipping Company', 'woocommerce-iyzico'); ?></p>
                 <select name="cargoNumber" style="width: 80%;">
