@@ -68,12 +68,15 @@ class Iyzico_Checkout_For_WooCommerce_Buyer_Protection {
         <?php
     }
 
-    public static function iyziCargoTrackingSave($order_id) {
+    public static function iyziCargoTrackingSave($order_id, $cargoTrackingNumber = false, $cargoNumber = false) {
 
         $orderId = (int) $order_id;
 
-        $cargoNumber = esc_sql($_POST['cargoNumber']);
-        $cargoTrackingNumber = esc_sql($_POST['cargoTrackingNumber']);
+        if(!empty($_POST['cargoNumber']) && !empty($_POST['cargoTrackingNumber'])) {
+            $cargoNumber = esc_sql($_POST['cargoNumber']);
+            $cargoTrackingNumber = esc_sql($_POST['cargoTrackingNumber']);
+        }
+
         $createOrUpdateControl = false;
 
         /* Empty Post  Control */
