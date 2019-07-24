@@ -3,7 +3,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-
 class Iyzico_Checkout_For_WooCommerce_iyzicoRequest {
 
 	
@@ -34,6 +33,12 @@ class Iyzico_Checkout_For_WooCommerce_iyzicoRequest {
 
 	}
 
+	public function iyzicoCargoTracking($baseUrl,$json,$authorizationData) {
+
+			$url = $baseUrl.'/v1/iyziup/create-zen-order-shipment-over-plugin-framework';
+
+		    return $this->curlPost($json,$authorizationData,$url);
+	}
 
 	public function curlPost($json,$authorizationData,$url) {
 

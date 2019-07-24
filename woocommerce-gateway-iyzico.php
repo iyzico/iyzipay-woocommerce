@@ -5,16 +5,15 @@
  * Description: iyzico Payment Gateway for WooCommerce.
  * Author: iyzico
  * Author URI: https://iyzico.com
- * Version: 1.1.0
+ * Version: 1.1.5
  * Text Domain: iyzico WooCommerce
  * Domain Path: /i18n/languages/
- *
+ * WC requires at least: 3.0.0
+ * WC tested up to: 3.6.4
  */
-
 define('IYZICO_PATH',untrailingslashit( plugin_dir_path( __FILE__ )));
 define('IYZICO_LANG_PATH',plugin_basename(dirname(__FILE__)) . '/i18n/languages/');
 define('IYZICO_PLUGIN_NAME','/'.plugin_basename(dirname(__FILE__)));
-
 
 
 if (!defined('ABSPATH')) {
@@ -118,15 +117,22 @@ if ( ! class_exists( 'Iyzico_CheckoutForm_For_WooCommerce' ) ) {
             include_once IYZICO_PATH . '/library/iyzico-for-woocommerce-gateway-pkibuilder.php';
             include_once IYZICO_PATH . '/library/iyzico-for-woocommerce-gateway-iyzicorequest.php';
             include_once IYZICO_PATH . '/library/iyzico-for-woocommerce-gateway-responseobjectgenerate.php';
+            include_once IYZICO_PATH . '/library/iyzico-for-woocommerce-buyer-protection.php';
            
             add_filter('woocommerce_payment_gateways',array($this,'AddIyzicoGateway'));
-
             
-            add_action('wp_footer',array('Iyzico_Checkout_For_WooCommerce_Gateway','getOverlayScript'));
+            add_action('wp_footer',
+                        array('Iyzico_Checkout_For_WooCommerce_Buyer_Protection',
+                        'getOverlayScript'));
 
+            add_action('woocommerce_admin_order_data_after_shipping_address', 
+                        array('Iyzico_Checkout_For_WooCommerce_Buyer_Protection',
+                        'iyziCargoTracking'));
 
+            add_action('woocommerce_process_shop_order_meta', 
+                        array('Iyzico_Checkout_For_WooCommerce_Buyer_Protection',
+                        'iyziCargoTrackingSave'));
         }   
-
 
 
         public function AddIyzicoGateway($methods) {

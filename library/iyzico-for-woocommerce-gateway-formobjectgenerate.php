@@ -11,7 +11,12 @@ class Iyzico_Checkout_For_WooCommerce_FormObjectGenerate {
 	}
 
 
-	public function generateOption($items,$data,$apiKey) {
+	public function generateOption($items,$data,$apiKey,$affiliate) {
+
+		if(!empty($affiliate)) {
+
+			$affiliate = '|'.$affiliate;
+		}
 
         $iyziModel       = new Iyzico_Checkout_For_WooCommerce_Model();
         $user            = wp_get_current_user();
@@ -28,7 +33,7 @@ class Iyzico_Checkout_For_WooCommerce_FormObjectGenerate {
 		$iyzico->forceThreeDS                 = "0";
 		$iyzico->callbackUrl                  = add_query_arg('wc-api', 'WC_Gateway_Iyzico', $data->get_checkout_order_received_url());
 		$iyzico->cardUserKey                  = $iyziModel->findUserCardKey($user->ID,$apiKey);
-		$iyzico->paymentSource                = 'WOOCOMMERCE|'.WOOCOMMERCE_VERSION.'|CARRERA-1.1.0';
+		$iyzico->paymentSource                = 'WOOCOMMERCE|'.WOOCOMMERCE_VERSION.'|CARRERA-1.1.5'.$affiliate;
 
 	
 		return $iyzico;
@@ -159,7 +164,14 @@ class Iyzico_Checkout_For_WooCommerce_FormObjectGenerate {
 		return $basketItems;
 	}
 
+	public function generateCargoTracking($trackingNumber,$paymentId,$shippingCompanyId) {
+			
+		$cargoObject = new stdClass();
 
+        $cargoObject->trackingNumber = $trackingNumber;
+        $cargoObject->paymentId = $paymentId;
+        $cargoObject->shippingCompanyId = $shippingCompanyId;  
 
-
+        return $cargoObject;
+	}
 }

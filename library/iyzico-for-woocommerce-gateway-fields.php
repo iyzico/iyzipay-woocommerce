@@ -3,7 +3,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-
 class Iyzico_Checkout_For_WooCommerce_Fields {
 
 	public static function iyzicoAdminFields() {
@@ -16,7 +15,7 @@ class Iyzico_Checkout_For_WooCommerce_Fields {
 		        'default' 	=> 'popup',
 		        'options' 	=> 
 		        	array(
-		        	 'https://api.iyzipay.com'    => __('Live', 'iyzico-checkout-for-woocommerce'),
+		        	 'https://api.iyzipay.com'    => __('Live', 'woocommerce-iyzico'),
 		        	 'https://sandbox-api.iyzipay.com' => __('Sandbox / Test', 'woocommerce-iyzico')
 		     )),
 		     'api_key' => array(
@@ -46,22 +45,22 @@ class Iyzico_Checkout_For_WooCommerce_Fields {
 		        'default' => 'popup',
 		        'options' => array('responsive' => __('Responsive', 'woocommerce-iyzico'), 'popup' => __('Popup', 'woocommerce-iyzico'))
 		    ),
-			'order_status' => array(
-				 'title' => __('Order Status', 'woocommerce-iyzico'),
-				 'type' => 'select',
-				 'description' => __('Recommended, Default', 'woocommerce-iyzico'),
-				 'default' => 'default',
-				 'options' => array('default' => __('Default', 'woocommerce-iyzico'), 
-				 					'pending' => __('Pending', 'woocommerce-iyzico'),
-				 					'processing' => __('Processing', 'woocommerce-iyzico'),
-				 					'on-hold' => __('On-Hold', 'woocommerce-iyzico'),
-				 					'completed' => __('Completed', 'woocommerce-iyzico'),
-				 					'cancelled' => __('Cancelled', 'woocommerce-iyzico'),
-				 					'refunded' => __('Refunded', 'woocommerce-iyzico'),
-				 					'failed' => __('Failed', 'woocommerce-iyzico'))
-			),
+		     'order_status' => array(
+		         'title' => __('Order Status', 'woocommerce-iyzico'),
+		         'type' => 'select',
+		         'description' => __('Recommended, Default', 'woocommerce-iyzico'),
+		         'default' => 'default',
+		         'options' => array('default' => __('Default', 'woocommerce-iyzico'), 
+		         					'pending' => __('Pending', 'woocommerce-iyzico'),
+		         					'processing' => __('Processing', 'woocommerce-iyzico'),
+		         					'on-hold' => __('On-Hold', 'woocommerce-iyzico'),
+		         					'completed' => __('Completed', 'woocommerce-iyzico'),
+		         					'cancelled' => __('Cancelled', 'woocommerce-iyzico'),
+		         					'refunded' => __('Refunded', 'woocommerce-iyzico'),
+		         					'failed' => __('Failed', 'woocommerce-iyzico'))
+		    ),
     	 'overlay_script' => array(
-            'title' 	=> __('Overlay Script', 'woocommerce-iyzico'),
+            'title' 	=> __('Buyer Protection - Page Overlay', 'woocommerce-iyzico'),
             'type' 		=> 'select',
             'required'  => false,
             'default' 	=> 'left',
@@ -71,6 +70,13 @@ class Iyzico_Checkout_For_WooCommerce_Fields {
             	 'bottomRight' 	=> __('Right', 'woocommerce-iyzico'),
             	 'hide' 	=> __('Hide', 'woocommerce-iyzico')
          )),
+         'affiliate_network' => array(
+             'title' => __('Affiliate Network', 'woocommerce-iyzico'),
+             'type' => 'text',
+             'required'  => false,
+             'description' => __('Payment source for agency', 'woocommerce-iyzico'),
+             'default' => ''
+          ),
 		    'enabled' => array(
 		        'title' => __('Enable/Disable', 'woocommerce-iyzico'),
 		        'label' => __('Enable iyzico checkout', 'woocommerce-iyzico'),
