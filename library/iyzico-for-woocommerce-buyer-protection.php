@@ -73,8 +73,8 @@ class Iyzico_Checkout_For_WooCommerce_Buyer_Protection {
         $orderId = (int) $order_id;
 
         if(!empty($_POST['cargoNumber']) && !empty($_POST['cargoTrackingNumber'])) {
-            $cargoNumber = esc_sql($_POST['cargoNumber']);
-            $cargoTrackingNumber = esc_sql($_POST['cargoTrackingNumber']);
+            $cargoNumber = $_POST['cargoNumber'];
+            $cargoTrackingNumber = $_POST['cargoTrackingNumber'];
         }
 
         $createOrUpdateControl = false;
@@ -85,6 +85,9 @@ class Iyzico_Checkout_For_WooCommerce_Buyer_Protection {
             return;
         }
 
+        $cargoNumber = esc_sql($cargoNumber);
+        $cargoTrackingNumber = esc_sql($cargoTrackingNumber);
+        
         $cargoTrackingField = 'iyzico_cargo_no_'.$orderId;
         $cargoNumberField = 'iyzico_cargo_name_'.$orderId;
         $cargoTrackingOption = get_option($cargoTrackingField);
