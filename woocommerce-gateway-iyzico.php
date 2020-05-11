@@ -9,7 +9,7 @@
  * Text Domain: iyzico WooCommerce
  * Domain Path: /i18n/languages/
  * WC requires at least: 3.0.0
- * WC tested up to: 3.5.4
+ * WC tested up to: 4.1.0
  */
 define('IYZICO_PATH',untrailingslashit( plugin_dir_path( __FILE__ )));
 define('IYZICO_LANG_PATH',plugin_basename(dirname(__FILE__)) . '/i18n/languages/');
