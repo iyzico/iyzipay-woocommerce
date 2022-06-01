@@ -9,9 +9,9 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
     public function __construct() {
 
         $this->id = 'iyzico';
-        $this->iyziV = '1.1.5';
-        $this->method_title = __('iyzico', 'woocommerce-iyzico');
-        $this->method_description = __('Easy Checkout');
+        $this->iyziV = '3.1.3';
+        $this->method_title = __('iyzico Checkout', 'woocommerce-iyzico');
+        $this->method_description = __('Best Payment Solution', 'woocommerce-iyzico');
         $this->has_fields = true;
         $this->order_button_text = __('Pay With Card', 'woocommerce-iyzico');
         $this->supports = array('products');
@@ -19,11 +19,11 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
         $this->init_form_fields();
         $this->init_settings();
 
-        $this->title        = $this->get_option( 'title' );
-        $this->description  = $this->get_option( 'description' );
+        $this->title        = __($this->get_option( 'title' ),'woocommerce-iyzico');
+        $this->description  = __($this->get_option( 'description'),'woocommerce-iyzico');
         $this->enabled      = $this->get_option( 'enabled' );
         $this->affiliate    = $this->get_option( 'affiliate_network' );
-        $this->icon         = plugins_url().IYZICO_PLUGIN_NAME.'/image/cards.png?v=1';
+        $this->icon         = plugins_url().IYZICO_PLUGIN_NAME.'/image/cards.png?v=3';
 
         add_action('init', array(&$this, 'iyzico_response'));
         add_action('woocommerce_api_wc_gateway_iyzico', array($this, 'iyzico_response'));
@@ -32,15 +32,16 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
             $this,
             'process_admin_options',
         ) );
-        
+
         add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array(
             $this,
             'admin_overlay_script',
-        ) );    
+        ) );
 
         add_action('woocommerce_receipt_iyzico', array($this, 'iyzico_loading_bar'));
         add_action('woocommerce_receipt_iyzico', array($this, 'iyzico_payment_form'));
-        
+
+
 
         if(isset($_GET['section']) && $_GET['section'] == 'iyzico') {
 
@@ -49,6 +50,9 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
 
     }
 
+    public function getApiKey(){
+        return $this->settings['api_key'];
+    }
 
     public function admin_overlay_script() {
 
@@ -73,43 +77,45 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
         $iyzicoJson               = json_encode($overlayObject,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE);
 
         $requestResponse          = $iyzicoRequest->iyzicoOverlayScriptRequest($baseUrl,$iyzicoJson,$authorizationData);
-    
+
 
         $iyzicoOverlayToken    = get_option('iyzico_overlay_token');
         $iyzicoOverlayPosition = get_option('iyzico_overlay_position');
 
+
         if(isset($requestResponse->protectedShopId)) {
-         
-            $requestResponse->protectedShopId = esc_js($requestResponse->protectedShopId);    
+
+            $requestResponse->protectedShopId = esc_js($requestResponse->protectedShopId);
 
             if(empty($iyzicoOverlayToken) && empty($iyzicoOverlayPosition)) {
 
-                add_option('iyzico_overlay_token',$requestResponse->protectedShopId,'','yes'); 
-                add_option('iyzico_overlay_position',$this->settings['overlay_script'],'','yes'); 
+                add_option('iyzico_overlay_token',$requestResponse->protectedShopId,'','no');
+                add_option('iyzico_overlay_position',$this->settings['overlay_script'],'','no');
 
             } else {
 
-                update_option('iyzico_overlay_token',$requestResponse->protectedShopId); 
-                update_option('iyzico_overlay_position',$this->settings['overlay_script']);   
-            } 
-        
+                update_option('iyzico_overlay_token',$requestResponse->protectedShopId);
+                update_option('iyzico_overlay_position',$this->settings['overlay_script']);
+            }
+
         } else {
-           
-            if(empty($iyzicoOverlayPosition)) { 
-                
-                add_option('iyzico_overlay_position',$this->settings['overlay_script'],'','yes'); 
-                
+
+            if(empty($iyzicoOverlayPosition)) {
+
+                add_option('iyzico_overlay_position',$this->settings['overlay_script'],'','no');
+
             } else {
 
-                update_option('iyzico_overlay_position',$this->settings['overlay_script']);   
-           
+                update_option('iyzico_overlay_position',$this->settings['overlay_script']);
+
             }
 
         }
-        
         return true;
-        
+
     }
+
+
 
     public function admin_options() {
         ob_start();
@@ -120,7 +126,7 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
         echo $parent_options;
         $pluginUrl = plugins_url().IYZICO_PLUGIN_NAME;
 
-        $html = '<style scoped>@media (max-width:768px){.iyziBrand{position:fixed;bottom:0;top:auto!important;right:0!important}}</style><div class="iyziBrandWrap"><div class="iyziBrand" style="clear:both;position:absolute;right: 50px;top:440px;display: flex;flex-direction: column;justify-content: center;"><img src='.$pluginUrl.'/image/zihni.png" style="    width: 150px;margin-left: auto;"><img src='.$pluginUrl.'/image/iyzico_logo.png style="    width: auto;margin-left: auto;"><strong><p style="text-align:right;">V: </strong>'.$this->iyziV.'</p></div></div>';
+        $html = '<style scoped>@media (max-width:768px){.iyziBrand{position:fixed;bottom:0;top:auto!important;right:0!important}}</style><div class="iyziBrandWrap"><div class="iyziBrand" style="clear:both;position:absolute;right: 50px;top:440px;display: flex;flex-direction: column;justify-content: center;"><img src='.$pluginUrl.'/image/iyzico_logo.png style="width: 250px;margin-left: auto;"><p style="text-align:center;"><strong>V: </strong>'.$this->iyziV.'</p></div></div>';
 
         echo $html;
     }
@@ -131,37 +137,67 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
 
     }
     public function init_form_fields() {
-        
+
         $this->form_fields = Iyzico_Checkout_For_WooCommerce_Fields::iyzicoAdminFields();
 
     }
 
     public function process_payment($order_id) {
-        
+
         $order = wc_get_order($order_id);
 
         return array(
-          'result'   => 'success',
-          'redirect' => $order->get_checkout_payment_url(true)
+            'result'   => 'success',
+            'redirect' => $order->get_checkout_payment_url(true)
         );
 
     }
 
-    public function iyzico_loading_bar($order_id) {
+    public function iyzico_loading_bar() {
 
-        echo '<style>.loading{width:40px;height:40px;background-color:#4ec8f1;margin:auto;-webkit-animation:sk-rotateplane 1.2s infinite ease-in-out;animation:sk-rotateplane 1.2s infinite ease-in-out}@-webkit-keyframes sk-rotateplane{0%{-webkit-transform:perspective(120px)}50%{-webkit-transform:perspective(120px) rotateY(180deg)}100%{-webkit-transform:perspective(120px) rotateY(180deg) rotateX(180deg)}}@keyframes sk-rotateplane{0%{transform:perspective(120px) rotateX(0) rotateY(0);-webkit-transform:perspective(120px) rotateX(0) rotateY(0)}50%{transform:perspective(120px) rotateX(-180.1deg) rotateY(0);-webkit-transform:perspective(120px) rotateX(-180.1deg) rotateY(0)}100%{transform:perspective(120px) rotateX(-180deg) rotateY(-179.9deg);-webkit-transform:perspective(120px) rotateX(-180deg) rotateY(-179.9deg)}}</style>';
+        echo '<style>.loading{width:40px;height:40px;background-color:#1E64FF;margin:auto;-webkit-animation:sk-rotateplane 1.2s infinite ease-in-out;animation:sk-rotateplane 1.2s infinite ease-in-out}@-webkit-keyframes sk-rotateplane{0%{-webkit-transform:perspective(120px)}50%{-webkit-transform:perspective(120px) rotateY(180deg)}100%{-webkit-transform:perspective(120px) rotateY(180deg) rotateX(180deg)}}@keyframes sk-rotateplane{0%{transform:perspective(120px) rotateX(0) rotateY(0);-webkit-transform:perspective(120px) rotateX(0) rotateY(0)}50%{transform:perspective(120px) rotateX(-180.1deg) rotateY(0);-webkit-transform:perspective(120px) rotateX(-180.1deg) rotateY(0)}100%{transform:perspective(120px) rotateX(-180deg) rotateY(-179.9deg);-webkit-transform:perspective(120px) rotateX(-180deg) rotateY(-179.9deg)}}</style>';
 
         echo '<div id="loadingBar">
                 <div class="loading">
                 </div>
                 <div class="brand">
-                    <p style="text-align:center;color:#4ec8f1;">iyzico</p>
+                    <p style="text-align:center;color:#1E64FF;">iyzico</p>
                 </div>
              </div>';
-        
+
     }
 
-    public function iyzico_payment_form($order_id) {
+    private function setcookieSameSite($name, $value, $expire, $path, $domain, $secure, $httponly) {
+
+        if (PHP_VERSION_ID < 70300) {
+
+            setcookie($name, $value, $expire, "$path; samesite=None", $domain, $secure, $httponly);
+        }
+        else {
+            setcookie($name, $value, [
+                'expires' => $expire,
+                'path' => $path,
+                'domain' => $domain,
+                'samesite' => 'None',
+                'secure' => $secure,
+                'httponly' => $httponly,
+            ]);
+
+
+        }
+    }
+
+
+    public function iyzico_payment_form($order_id,$payMethod = null) {
+
+        $wooCommerceCookieKey = 'wp_woocommerce_session_';
+        foreach ($_COOKIE as $name => $value) {
+            if (stripos($name,$wooCommerceCookieKey) === 0) {
+                $wooCommerceCookieKey = $name;
+            }
+        }
+
+        $setCookie = $this->setcookieSameSite($wooCommerceCookieKey,$_COOKIE[$wooCommerceCookieKey], time() + 86400, "/", $_SERVER['SERVER_NAME'],true, true);
 
         $this->versionCheck();
 
@@ -172,6 +208,7 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
         $apiKey                    = $this->settings['api_key'];
         $secretKey                 = $this->settings['secret_key'];
         $baseUrl                   = $this->settings['api_type'];
+        $language                  = $this->settings['form_language'];
         $rand                      = rand(1,99999);
         $user                      = wp_get_current_user();
         $iyzicoConversationId      = WC()->session->set('iyzicoConversationId',$order_id);
@@ -184,25 +221,73 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
         $pkiBuilder                = new Iyzico_Checkout_For_WooCommerce_PkiBuilder();
         $iyzicoRequest             = new Iyzico_Checkout_For_WooCommerce_iyzicoRequest();
 
-        $iyzico                   = $formObjectGenerate->generateOption($customerCart,$getOrder,$apiKey,$this->affiliate);
+        if($payMethod != "pwi") {
+            $iyzico                   = $formObjectGenerate->generateOption($customerCart,$language,$getOrder,$apiKey,$this->affiliate);
+        } else {
+            $iyzico                   = $formObjectGenerate->generateOptionPwi($customerCart,$language,$getOrder,$apiKey,$this->affiliate);
+        }
+
         $iyzico->buyer            = $formObjectGenerate->generateBuyer($getOrder);
         $iyzico->shippingAddress  = $formObjectGenerate->generateShippingAddress($getOrder);
         $iyzico->billingAddress   = $formObjectGenerate->generateBillingAddress($getOrder);
         $iyzico->basketItems      = $formObjectGenerate->generateBasketItems($customerCart,$getOrder);
 
-        $orderObject              = $pkiBuilder->createFormObjectSort($iyzico);
+        if($payMethod != "pwi") {
+            $orderObject              = $pkiBuilder->createFormObjectSort($iyzico);
+        } else {
+            $orderObject              = $pkiBuilder->createFormObjectSortPwi($iyzico);
+        }
+
         $pkiString                = $pkiBuilder->pkiStringGenerate($orderObject);
+
         $authorizationData        = $pkiBuilder->authorizationGenerate($pkiString,$apiKey,$secretKey,$rand);
-        
 
         $iyzicoJson               = json_encode($iyzico,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE);
- 
-        $requestResponse          = $iyzicoRequest->iyzicoCheckoutFormRequest($baseUrl,$iyzicoJson,$authorizationData);
+
+
+
+
+        if($payMethod != "pwi") {
+            $requestResponse          = $iyzicoRequest->iyzicoCheckoutFormRequest($baseUrl,$iyzicoJson,$authorizationData);
+        } else {
+
+            $requestResponse          = $iyzicoRequest->iyzicoPwiRequest($baseUrl,$iyzicoJson,$authorizationData);
+
+            return $requestResponse->payWithIyzicoPageUrl;
+        }
         $className                = $this->get_option('form_class');
-        $message                  = '<p id="infoBox" style="display:none;">' . __('Thank you for your order, please click the button below to pay with iyzico Checkout.', 'woocommerce-iyzico') . '</p>';
+
+        if(empty($language))
+        {
+          if ($className == 'popup'){
+              $message                  = '<p id="infoBox" style="display:none;">' . __("Thank you for your order, please click the button below to pay with iyzico checkout.", 'woocommerce-iyzico') . '</p>';
+          }
+          else{
+              $message                  = '<p id="infoBox" style="display:none;">' . __('Thank you for your order, please enter your card information in the payment form below to pay with iyzico checkout.', 'woocommerce-iyzico') . '</p>';
+          }
+        }elseif ($language == 'TR' or $language == 'tr') {
+
+          if ($className == 'popup'){
+              $message                  = '<p id="infoBox" style="display:none;">' . 'Siparişiniz için teşekkür ederiz, iyzico ile ödemek için Ödeme Formunu Aç butonuna tıklayarak kart bilgilerinizi girebilirsiniz.'.'</p>';
+          }
+          else{
+              $message                  = '<p id="infoBox" style="display:none;">' . 'Siparişiniz için teşekkür ederiz, iyzico ile ödemek için aşağıdaki ödeme formu alanına kart bilgilerinizi girebilirsiniz.' . '</p>';
+          }
+
+        }else {
+          if ($className == 'popup'){
+              $message                  = '<p id="infoBox" style="display:none;">' . 'Thank you for your order, please click the button below to pay with iyzico checkout.'.'</p>';
+          }
+          else{
+              $message                  = '<p id="infoBox" style="display:none;">' . 'Thank you for your order, please enter your card information in the payment form below to pay with iyzico checkout.' . '</p>';
+          }
+
+        }
+
+
 
         echo '<script>jQuery(window).on("load", function(){document.getElementById("loadingBar").style.display="none",document.getElementById("infoBox").style.display="block",document.getElementById("iyzipay-checkout-form").style.display="block"});</script>';
-            
+
         if(isset($requestResponse->status)) {
             if($requestResponse->status == 'success') {
                 echo $message;
@@ -218,33 +303,26 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
 
     }
 
-    public function iyzico_response() {
+    public function iyzico_response($webhook = null, $webhookPaymentConversationId = null, $webhookToken = null) {
 
         global $woocommerce;
 
+
         try {
-
-
-            if(!$_POST['token']) {
-
-               throw new \Exception("Token not found");
-            
-            }
-            
-            $conversationId  = WC()->session->get('iyzicoConversationId');
-            $customerId      = WC()->session->get('iyzicoCustomerId');
-            $orderId         = $conversationId;
-
-            if(empty($orderId)) {
-               throw new \Exception("Order not found");
-            }
 
             $token           = $_POST['token'];
             $apiKey          = $this->settings['api_key'];
             $secretKey       = $this->settings['secret_key'];
             $baseUrl         = $this->settings['api_type'];
             $rand            = rand(1,99999);
-            
+            $conversationId  = "";
+
+            if ($webhook == 'webhook'){
+                $token = $webhookToken;
+                $conversationId = $webhookPaymentConversationId;
+            }
+
+
             $iyziModel       = new Iyzico_Checkout_For_WooCommerce_Model();
 
             $responseObjectGenerate    = new Iyzico_Checkout_For_WooCommerce_ResponseObjectGenerate();
@@ -257,19 +335,51 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
             $tokenDetailObject         = json_encode($tokenDetailObject,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE);
             $requestResponse           = $iyzicoRequest->iyzicoCheckoutFormDetailRequest($baseUrl,$tokenDetailObject,$authorizationData);
 
+            $order = new WC_Order($requestResponse->basketId);
+
+            if ($webhook == 'webhook' && $requestResponse->status == 'failure'){
+                return new WP_Error( $requestResponse->errorCode, $requestResponse->errorMessage, array( 'status' => 404 ) );
+            }
+
+            if ($webhook == 'webhook' && $order->get_status() == 'processing'){
+                return http_response_code(200);
+            }
+
+            if(!$order->get_payment_method_title()) {
+                $order->set_payment_method_title("iyzico ile Öde");
+            }
+
+            if($requestResponse->paymentStatus == 'INIT_BANK_TRANSFER' && $requestResponse->status == 'success') {
+
+                $order->update_status("on-hold");
+
+                $orderMessage = 'iyzico Banka havalesi/EFT ödemesi bekleniyor.';
+                $order->add_order_note($orderMessage,0,true);
+
+                $woocommerce->cart->empty_cart();
+                $checkoutOrderUrl = $order->get_checkout_order_received_url();
+                $redirectUrl = add_query_arg(array('msg' => 'Thank You', 'type' => 'woocommerce-message'), $checkoutOrderUrl);
+                return wp_redirect($redirectUrl);
+            }
+
+            $customerId      = $order->get_customer_id();
+            $orderId         = $requestResponse->basketId;
+
+
             $iyzicoLocalOrder = new stdClass;
             $iyzicoLocalOrder->paymentId     = !empty($requestResponse->paymentId) ? (int) $requestResponse->paymentId : '';
             $iyzicoLocalOrder->orderId       = $orderId;
             $iyzicoLocalOrder->totalAmount   = !empty($requestResponse->paidPrice) ? (float) $requestResponse->paidPrice : '';
-            $iyzicoLocalOrder->status        = $requestResponse->paymentStatus; 
+            $iyzicoLocalOrder->status        = $requestResponse->paymentStatus;
 
             $iyzico_order_insert  = $iyziModel->insertIyzicoOrder($iyzicoLocalOrder);
-     
+
             if($requestResponse->paymentStatus != 'SUCCESS' || $requestResponse->status != 'success' || $orderId != $requestResponse->basketId ) {
 
                 if($requestResponse->status == 'success' && $requestResponse->paymentStatus == 'FAILURE') {
-                    throw new Exception('Kartınız için 3D  güvenliği onaylanmamıştır.');
-                    
+
+                    throw new Exception.__("3D security has not been validated for your card.", 'woocommerce-iyzico');
+
                 }
                 /* Redirect Error */
                 $errorMessage = isset($requestResponse->errorMessage) ? $requestResponse->errorMessage : 'Failed';
@@ -279,9 +389,9 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
 
             /* Save Card */
             if(isset($requestResponse->cardUserKey)) {
-                
+
                 if($customerId) {
-                    
+
                     $cardUserKey = $iyziModel->findUserCardKey($customerId,$apiKey);
 
                     if($requestResponse->cardUserKey != $cardUserKey) {
@@ -289,16 +399,15 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
                         $insertCardUserKey = $iyziModel->insertCardUserKey($customerId,$requestResponse->cardUserKey,$apiKey);
 
                     }
-                    
-                }   
-            
+
+                }
+
             }
 
-            $order = new WC_Order($requestResponse->basketId);
-            
             $orderMessage = 'Payment ID: '.$requestResponse->paymentId;
+
             $order->add_order_note($orderMessage,0,true);
-            
+
             if($baseUrl == 'https://sandbox-api.iyzipay.com') {
 
                 $orderMessage = '<strong><p style="color:red">TEST ÖDEMESİ</a></strong>';
@@ -307,57 +416,60 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
 
             if (isset($requestResponse->installment) && !empty($requestResponse->installment) && $requestResponse->installment > 1) {
 
+                $orderData = $order->get_data();
+                $orderTotal = $orderData['total'];
 
-                $totalPrice         = WC()->session->get('iyzicoOrderTotalAmount');
-                $installment_fee    = $requestResponse->paidPrice - $totalPrice; 
-       
-                $order_fee          = new stdClass();
-                $order_fee->id      = 'Installment Fee';
-                $order_fee->name    = __('Installment Fee', 'woocommerce-iyzico');
-                $order_fee->amount  = $installment_fee;
-                $order_fee->taxable = false;
-                $fee_id = $order->add_fee($order_fee);
+                $installment_fee    = $requestResponse->paidPrice - $orderTotal;
+
+                $item_fee = new WC_Order_Item_Fee();
+                $item_fee->set_name($requestResponse->installment . " " .__("Installment Commission", 'woocommerce-iyzico'));
+                $item_fee->set_amount($installment_fee);
+                $item_fee->set_tax_class( '' );
+                $item_fee->set_tax_status( 'none' );
+                $item_fee->set_total($installment_fee);
+
+                $order->add_item( $item_fee );
                 $order->calculate_totals(true);
-
-             
 
                 update_post_meta($order_id, 'iyzico_no_of_installment',$requestResponse->installment);
                 update_post_meta($order_id, 'iyzico_installment_fee', $installment_fee);
             }
 
-            /* Session Unset */
-            WC()->session->set('iyzicoConversationId',null);
-            WC()->session->set('iyzicoCustomerId',null);
-            WC()->session->set('iyzicoOrderTotalAmount',null);
 
+            $order->payment_complete();
 
-            $order->payment_complete();            
-            
             /* Order Status */
             $orderStatus = $this->settings['order_status'];
-            
+
             if($orderStatus != 'default' && !empty($orderStatus)) {
                 $order->update_status($orderStatus);
             }
 
-            $woocommerce->cart->empty_cart();
+            if ($webhook == 'webhook'){
+                return http_response_code(200);
+            }
 
+            $woocommerce->cart->empty_cart();
             $checkoutOrderUrl = $order->get_checkout_order_received_url();
 
             $redirectUrl = add_query_arg(array('msg' => 'Thank You', 'type' => 'woocommerce-message'), $checkoutOrderUrl);
-            wp_redirect($redirectUrl);
-            
+
+            return wp_redirect($redirectUrl);
+
         } catch (Exception $e) {
 
+            if ($webhook == 'webhook'){
+                return new WP_Error( $requestResponse->errorCode, $requestResponse->errorMessage, array( 'status' => 404 ) );
+            }
+
             $respMsg = $e->getMessage();
-            $orderId  = WC()->session->get('iyzicoConversationId');
             $order = new WC_Order($orderId);
             $order->update_status('failed');
             $order->add_order_note($respMsg,0,true);
 
             wc_add_notice(__($respMsg, 'woocommerce-message'), 'error');
             $redirectUrl = $woocommerce->cart->get_cart_url();
-            wp_redirect($redirectUrl);
+            return wp_redirect($redirectUrl);
         }
 
     }
@@ -403,17 +515,17 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
 
             $result = $this->verifyTLS($tlsUrl);
             if($result) {
-                add_option('iyziTLS',1.2,'','yes');
-                $tlsVersion = get_option('iyziTLS'); 
+                add_option('iyziTLS',1.2,'','no');
+                $tlsVersion = get_option('iyziTLS');
             }
 
         } elseif($tlsVersion != 1.2) {
 
             $result = $this->verifyTLS($tlsUrl);
             if($result) {
-                update_option('iyziTLS',1.2); 
+                update_option('iyziTLS',1.2);
                 $tlsVersion = get_option('iyziTLS');
-            }  
+            }
         }
 
 
@@ -445,6 +557,5 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
         curl_close($curl);
 
         return $response;
-    }   
+    }
 }
-

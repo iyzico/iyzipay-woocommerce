@@ -5,11 +5,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Iyzico_Checkout_For_WooCommerce_iyzicoRequest {
 
-	
+
 	public function iyzicoCheckoutFormRequest($baseUrl,$json,$authorizationData) {
 
 			$url = $baseUrl.'/payment/iyzipos/checkoutform/initialize/auth/ecom';
-				 
+
+		    return $this->curlPost($json,$authorizationData,$url);
+
+	}
+
+	public function iyzicoPwiRequest($baseUrl,$json,$authorizationData) {
+
+			$url = $baseUrl.'/payment/pay-with-iyzico/initialize';
+
 		    return $this->curlPost($json,$authorizationData,$url);
 
 	}
@@ -17,7 +25,7 @@ class Iyzico_Checkout_For_WooCommerce_iyzicoRequest {
 	public function iyzicoCheckoutFormDetailRequest($baseUrl,$json,$authorizationData) {
 
 			$url = $baseUrl.'/payment/iyzipos/checkoutform/auth/ecom/detail';
-				 
+
 		    return $this->curlPost($json,$authorizationData,$url);
 
 	}
@@ -53,11 +61,11 @@ class Iyzico_Checkout_For_WooCommerce_iyzicoRequest {
 		curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 0);
 		curl_setopt($curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
 		curl_setopt($curl, CURLOPT_TIMEOUT, 150);
-		
-		curl_setopt(        
+
+		curl_setopt(
 		    $curl, CURLOPT_HTTPHEADER, array(
 		        "Authorization: " .$authorizationData['authorization'],
-		        "x-iyzi-rnd:".$authorizationData['rand_value'], 
+		        "x-iyzi-rnd:".$authorizationData['rand_value'],
 		        "Content-Type: application/json",
 		    )
 		);
@@ -65,7 +73,7 @@ class Iyzico_Checkout_For_WooCommerce_iyzicoRequest {
 		$result = json_decode(curl_exec($curl));
 		curl_close($curl);
 
-		
+
 
 		return $result;
 	}

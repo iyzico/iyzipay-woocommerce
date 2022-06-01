@@ -22,7 +22,13 @@ class Iyzico_Checkout_For_WooCommerce_Helper {
 
 		foreach ($items as  $item) {
 
-			$productId 	= $item['product_id'];
+            if ($item['variation_id']){
+                $productId = $item['variation_id'];
+            }
+            else{
+                $productId = $item['product_id'];
+            }
+
 			$product 	= wc_get_product($productId);
 			$realPrice  = $this->realPrice($product->get_sale_price(),$product->get_price());
 
@@ -108,5 +114,4 @@ class Iyzico_Checkout_For_WooCommerce_Helper {
 		return $salePrice;
 
 	}
-
 }

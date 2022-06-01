@@ -48,9 +48,9 @@ class Iyzico_Checkout_For_WooCommerce_Buyer_Protection {
 
         $pluginUrl = plugins_url().IYZICO_PLUGIN_NAME;
         ?>
-            <?php if($protectedControl && $orderStatus && $paymentMethod == 'iyzico'): ?> 
+            <?php if($protectedControl && $orderStatus && $paymentMethod == 'iyzico'): ?>
 
-                
+
                 <h3><?php echo __('iyzico Protected Shopping, Shipping Tracking', 'woocommerce-iyzico'); ?></h3>
                 <p><?php echo __('By entering the shipping tracking number of this order, you can ensure your customer have real time order tracking.', 'woocommerce-iyzico'); ?></p>
                 <p style="font-weight:bold;margin-bottom:0px !important;"><?php echo __('Shipping Company', 'woocommerce-iyzico'); ?></p>
@@ -87,7 +87,7 @@ class Iyzico_Checkout_For_WooCommerce_Buyer_Protection {
 
         $cargoNumber = esc_sql($cargoNumber);
         $cargoTrackingNumber = esc_sql($cargoTrackingNumber);
-        
+
         $cargoTrackingField = 'iyzico_cargo_no_'.$orderId;
         $cargoNumberField = 'iyzico_cargo_name_'.$orderId;
         $cargoTrackingOption = get_option($cargoTrackingField);
@@ -99,7 +99,7 @@ class Iyzico_Checkout_For_WooCommerce_Buyer_Protection {
 
             return;
         }
-        
+
         if(!empty($cargoNumberOption) && !empty($cargoTrackingOption)) {
 
             $createOrUpdateControl = true;
@@ -140,15 +140,15 @@ class Iyzico_Checkout_For_WooCommerce_Buyer_Protection {
 
                 if(empty($createOrUpdateControl)) {
 
-                    add_option($cargoNumberField,$cargoNumber,'','yes'); 
-                    add_option($cargoTrackingField,$cargoTrackingNumber,'','yes');
+                    add_option($cargoNumberField,$cargoNumber,'','no');
+                    add_option($cargoTrackingField,$cargoTrackingNumber,'','no');
 
                 } else {
 
-                    update_option($cargoNumberField,$cargoNumber);   
+                    update_option($cargoNumberField,$cargoNumber);
                     update_option($cargoTrackingField,$cargoTrackingNumber);
-                } 
-            
+                }
+
             } else {
 
                 return;
@@ -165,15 +165,30 @@ class Iyzico_Checkout_For_WooCommerce_Buyer_Protection {
 
         $overlayScript = false;
 
-        if($activePlugins['enabled'] != 'no') { 
-            if($position != 'hide' && !empty($token)) {
+        if($activePlugins['enabled'] != 'no') {
+            if($position != 'hide') {
 
-                $overlayScript = "<script> window.iyz = { token:'".$token."', position:'".$position."',ideaSoft: false};</script>
+                $overlayScript = "<script> window.iyz = { token:'".$token."', position:'".$position."',ideaSoft: false, pwi:true};</script>
                     <script src='https://static.iyzipay.com/buyer-protection/buyer-protection.js' type='text/javascript'></script>";
             }
         }
 
         echo $overlayScript;
-    }   
+    }
+
+    public static function iyzicoOverlayScriptMobileCss(){
+
+        echo '<style>
+	                @media screen and (max-width: 380px) {
+                        ._1xrVL7npYN5CKybp32heXk {
+		                    position: fixed;
+			                bottom: 0!important;
+    		                top: unset;
+    		                left: 0;
+    		                width: 100%;
+                        }
+                    }
+	            </style>';
+    }
 
 }

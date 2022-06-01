@@ -1,23 +1,26 @@
 === iyzico WooCommerce ===
-Contributors: iyzico,mehmetselim
-Tags: payment, ecommerce,credit card,checkout,iyzico,wordpress ecommerce
-Tested up to: 5.2.1
-Stable tag: 1.1.5
+Contributors: iyzico,mehmetselim,sozgat,feyzullahdemir
+Tags: payment, ecommerce,credit card,checkout woocommerce,iyzico,wordpress ecommerce
+Tested up to: 6.0
+Stable tag: 3.1.3
 Requires at least: 4.7
+Requires PHP: 5.4
 License: LGPL v3.0
 License URI: https://www.gnu.org/licenses/lgpl-3.0.en.html
 
 == Description ==
-- This is a WooCommerce module developed by iyzico Integration team. 
+- This is a WooCommerce module developed by iyzico Integration team.
 
-- You can easily integrate iyzico WooCommerce module into your e-commerce website and start receiving payment seamlessly and securely. 
-Check out some of other advantages of iyzico WooCommerce Modul from below; 
+- After the integration you will be able to use pay with iyzico (iyzico's alternative payment method) automatically
+
+- You can easily integrate iyzico WooCommerce module into your e-commerce website and start receiving payment seamlessly and securely.
+Check out some of other advantages of iyzico WooCommerce Modul from below;
 
 - You can embed iyzico check-out form either as responsive or pop-up onto your payment screen and increase your sales conversion.
 
 - The module controlled by SUCURI and it is totally secure.
 
-- With the open source code, you can make easily make new developments on your website. 
+- With the open source code, you can make easily make new developments on your website.
 
 - iyzico WooCommerce module supports SEO tools and is 100% compatible with Google.
 
@@ -25,9 +28,9 @@ Check out some of other advantages of iyzico WooCommerce Modul from below;
 
 - iyzico WooCommerce module allows you to sell with installments on your website.
 
-- After iyzico WooCommerce integration, with iyzico’s Buyer Protection feature you can offer your customers 24/7 live support as well as order tracking. 
+- After iyzico WooCommerce integration, with iyzico’s Buyer Protection feature you can offer your customers 24/7 live support as well as order tracking.
 
-- iyzico WooCommerce module is 100% compatible with WooCommerce and Wordpress systems. 
+- iyzico WooCommerce module is 100% compatible with WooCommerce and Wordpress systems.
 
 - After the integration you can offer manually created orders and payment support to your customers.
 
@@ -54,6 +57,55 @@ Wordpress Marketplace in search "iyzico WooCommerce" and install
 7. Order Management
 
 == Changelog ==
+= 3.1.3 =
+  * Dev: Checkout and pwi language
+  * Fix: Buyer Protection Logo
+  * Fix: Checkout Translation
+  * Fix: Order Status
+  * WooCommerce + Wordpress latest version tested up
+
+= 3.1.1 =
+  * Dev: Custom Links for Setting,Docs,Support
+  * Dev: CoForm Loading Bar Css
+  * Fix: iyzico overlayscript css
+  * Fix: PWI Translation
+  * WooCommerce + Wordpress latest version tested up
+
+= 3.1.0 =
+  * New: Webhook notification
+  * New: Settings button on plugin page
+  * Dev: iyzico logos updated on admin panel
+  * Dev: iyzico buyer protection logo is updated for pwi
+  * Fix: Price and commission bug of installment fee
+  * Fix: Variation product price bug
+  * Fix: Currency problem except TRY in pay with iyzico
+  * Fix: iyzico overlayscript header problem on mobile
+  * Fix: Payment source length limit
+  * Fix: Translation
+  * WooCommerce + Wordpress latest version tested up
+
+= 3.0.1 =
+  * PWI Name Field bug fix.
+  * PWI - logo + text updated.
+  * Credit Card - logo text updated.
+  * WooCommerce + Wordpress latest version tested up
+
+= 3.0.0 =
+  * After the integration you will be able to use pay with iyzico (iyzico's alternative payment method) automatically
+  * WooCommerce latest version tested up
+
+= 2.0.1 =
+  * Hot Fix: Google Chrome SameSite Solution added.
+  * WooCommerce latest version tested up
+
+= 2.0.0 =
+  * Protected Bank Transfer added.
+  * WordPress + WooCommerce latest version tested up
+
+= 1.1.6 =
+  * Hot fix performance updated.
+  * New parameters added for iyziCargoTrackingSave func.
+
 = 1.1.5 =
   * Affiliate Network Field added.
 
@@ -100,20 +152,69 @@ Wordpress Marketplace in search "iyzico WooCommerce" and install
   * bug fixed installment fee
 
 = 1.0.1 =
-  * bug fixed 
+  * bug fixed
 
 = 1.0.0 =
  * Initial Release
 
 
 == Upgrade Notice ==
+= 3.1.3 =
+  * Dev: Checkout and pwi language
+  * Fix: Buyer Protection Logo
+  * Fix: Checkout Translation
+  * Fix: Order Status
+  * WooCommerce + Wordpress latest version tested up
+  
+= 3.1.1 =
+  * Dev: Custom Links for Setting,Docs,Support
+  * Dev: CoForm Loading Bar Css
+  * Fix: iyzico overlayscript css
+  * Fix: PWI Translation
+  * WooCommerce + Wordpress latest version tested up
+
+= 3.1.0 =
+  * New: Webhook notification
+  * New: Settings button on plugin page
+  * Dev: iyzico logos updated on admin panel
+  * Dev: iyzico buyer protection logo is updated for pwi
+  * Fix: Price and commission bug of installment fee
+  * Fix: Variation product price bug
+  * Fix: Currency problem except TRY in pay with iyzico
+  * Fix: iyzico overlayscript header problem on mobile
+  * Fix: Payment source length limit
+  * Fix: Translation
+  * WooCommerce + Wordpress latest version tested up
+
+= 3.0.1 =
+  * PWI Name Field bug fix.
+  * PWI - logo + text updated.
+  * Credit Card - logo text updated.
+  * WooCommerce + Wordpress latest version tested up
+
+= 3.0.0 =
+  * After the integration you will be able to use pay with iyzico (iyzico's alternative payment method) automatically
+  * WooCommerce latest version tested up
+
+= 2.0.1 =
+  * Hot Fix: Google Chrome SameSite Solution added.
+  * WooCommerce latest version tested up
+
+= 2.0.0 =
+  * Protected Bank Transfer added.
+  * WordPress + WooCommerce latest version tested up
+
+= 1.1.6 =
+  * Hot fix performance updated.
+  * New parameters added for iyziCargoTrackingSave func.
+
 = 1.1.5 =
   * Affiliate Network Field added.
-  
+
 = 1.1.4 =
   * Auto requirements control updated.
   * WordPress + WooCommerce latest version tested up
-  
+
 = 1.1.3 =
   * New feature, iyzico protected shopping, shipping tracking added.
 
@@ -126,13 +227,13 @@ Wordpress Marketplace in search "iyzico WooCommerce" and install
 
 = 1.1.0 =
   * New feature to 'Order Status' added.
-  
+
 = 1.0.9 =
   * Order Status changed to 'processing'
-  
+
 = 1.0.8 =
   * Order Status changed to 'completed'
-  
+
 = 1.0.7 =
   * BasketItemPrice bug fixed.
 
@@ -145,7 +246,7 @@ Wordpress Marketplace in search "iyzico WooCommerce" and install
 
 = 1.0.4 =
   * Bug fixed
-  
+
 = 1.0.3 =
   * Bug fixed and New Features
 
