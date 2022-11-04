@@ -164,7 +164,8 @@ class Iyzico_Checkout_For_WooCommerce_Buyer_Protection {
         $activePlugins     = get_option('woocommerce_iyzico_settings');
 
         $overlayScript = false;
-
+        if(is_array($activePlugins))
+        {
         if($activePlugins['enabled'] != 'no') {
             if($position != 'hide') {
 
@@ -172,7 +173,7 @@ class Iyzico_Checkout_For_WooCommerce_Buyer_Protection {
                     <script src='https://static.iyzipay.com/buyer-protection/buyer-protection.js' type='text/javascript'></script>";
             }
         }
-
+      }
         echo $overlayScript;
     }
 

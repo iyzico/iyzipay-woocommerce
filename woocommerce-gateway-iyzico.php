@@ -5,11 +5,11 @@
  * Description: iyzico Payment Gateway for WooCommerce.
  * Author: iyzico
  * Author URI: https://iyzico.com
- * Version: 3.1.3
+ * Version: 3.2.1
  * Text Domain: iyzico WooCommerce
  * Domain Path: /i18n/languages/
  * WC requires at least: 3.0.0
- * WC tested up to: 5.6.0
+ * WC tested up to: 7.0.0
  */
 define('IYZICO_PATH',untrailingslashit( plugin_dir_path( __FILE__ )));
 define('IYZICO_LANG_PATH',plugin_basename(dirname(__FILE__)) . '/i18n/languages/');
@@ -79,6 +79,8 @@ if ( ! class_exists( 'Iyzico_For_WooCommerce' ) ) {
 
             delete_option('iyzico_overlay_token');
             delete_option('iyzico_overlay_position');
+            delete_option('iyzico_thank_you');
+            delete_option('init_active_webhook_url');
 
             $table_name = $wpdb->prefix . 'iyzico_order';
             $table_name2 = $wpdb->prefix . 'iyzico_card';
@@ -92,8 +94,10 @@ if ( ! class_exists( 'Iyzico_For_WooCommerce' ) ) {
         }
 
         public function init() {
+
             $this->InitIyzicoPaymentGateway();
             self::createIyzicoWebhookUrlKey();
+
         }
 
 
@@ -127,11 +131,11 @@ if ( ! class_exists( 'Iyzico_For_WooCommerce' ) ) {
 
             add_filter('woocommerce_payment_gateways',array($this,'AddIyzicoGateway'));
 
-
-
             add_action( 'wp_footer',
                 array('Iyzico_Checkout_For_WooCommerce_Buyer_Protection',
                     'iyzicoOverlayScriptMobileCss') );
+
+
 
 
             add_action('wp_footer',
@@ -189,7 +193,10 @@ if ( ! class_exists( 'Iyzico_For_WooCommerce' ) ) {
             if (!$iyziUrlId){
                 add_option(IYZICO_WEBHOOK_URL_KEY, $uniqueUrlId , '' ,'no');
             }
+
         }
+
+
     }
 
 Iyzico_For_WooCommerce::get_instance();

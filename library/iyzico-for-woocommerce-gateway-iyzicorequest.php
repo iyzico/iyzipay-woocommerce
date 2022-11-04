@@ -6,6 +6,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Iyzico_Checkout_For_WooCommerce_iyzicoRequest {
 
 
+	public function iyzicoPostWebhookUrlKey($baseUrl,$json,$authorizationData) {
+
+			$url = $baseUrl.'/payment/notification/update';
+
+				return $this->curlPost($json,$authorizationData,$url);
+
+	}
+
 	public function iyzicoCheckoutFormRequest($baseUrl,$json,$authorizationData) {
 
 			$url = $baseUrl.'/payment/iyzipos/checkoutform/initialize/auth/ecom';

@@ -41,7 +41,7 @@ class Iyzico_Checkout_For_WooCommerce_FormObjectGenerate {
 		$iyzico->forceThreeDS                 = "0";
 		$iyzico->callbackUrl                  = add_query_arg('wc-api', 'WC_Gateway_Iyzico', $data->get_checkout_order_received_url());
 		$iyzico->cardUserKey                  = $iyziModel->findUserCardKey($user->ID,$apiKey);
-		$iyzico->paymentSource                = 'WOOCOMMERCE|'.WOOCOMMERCE_VERSION.'|CARRERA-3.1.3'.$affiliate;
+		$iyzico->paymentSource                = 'WOOCOMMERCE|'.WOOCOMMERCE_VERSION.'|CARRERA-3.2.1'.$affiliate;
 
 
 		return $iyzico;
@@ -75,7 +75,7 @@ class Iyzico_Checkout_For_WooCommerce_FormObjectGenerate {
 		$iyzico->paymentGroup                 = 'PRODUCT';
 		$iyzico->callbackUrl                  = add_query_arg('wc-api', 'WC_Gateway_Iyzico', $data->get_checkout_order_received_url());
 		$iyzico->cancelUrl 					          = get_site_url();
-		$iyzico->paymentSource                = 'WOOCOMMERCE|'.WOOCOMMERCE_VERSION.'|CARRERA-3.1.3|PWI'.$affiliate;
+		$iyzico->paymentSource                = 'WOOCOMMERCE|'.WOOCOMMERCE_VERSION.'|CARRERA-PWI-3.2.1'.$affiliate;
 
 
 		return $iyzico;
@@ -83,6 +83,11 @@ class Iyzico_Checkout_For_WooCommerce_FormObjectGenerate {
 	}
 
 	public function generateBuyer($data) {
+
+
+
+
+
 
 		$buyer = new stdClass();
 
@@ -95,12 +100,13 @@ class Iyzico_Checkout_For_WooCommerce_FormObjectGenerate {
         $buyer->registrationDate            = '2018-07-06 11:11:11';
         $buyer->lastLoginDate               = '2018-07-06 11:11:11';
         $buyer->registrationAddress         = $this->helper->dataCheck($data->get_billing_address_1().$data->get_billing_address_2());
-        $buyer->city                        = $this->helper->dataCheck(WC()->countries->states[$data->get_billing_country()][$data->get_billing_state()]);
+        $buyer->city                        = isset(WC()->countries->states[$data->get_billing_country()][$data->get_billing_state()]) ? $this->helper->dataCheck(WC()->countries->states[$data->get_billing_country()][$data->get_billing_state()]) : 'NONE';
         $buyer->country                     = $this->helper->dataCheck(WC()->countries->countries[$data->get_billing_country()]);
         $buyer->zipCode                     = $this->helper->dataCheck($data->get_billing_postcode());
         $buyer->ip                          = $_SERVER['REMOTE_ADDR'];
 
         return $buyer;
+
 	}
 
 	public function generateShippingAddress($data) {
@@ -132,7 +138,7 @@ class Iyzico_Checkout_For_WooCommerce_FormObjectGenerate {
 		$billingAddress->address          = $this->helper->dataCheck($address);
 		$billingAddress->zipCode          = $this->helper->dataCheck($data->get_billing_postcode());
 		$billingAddress->contactName      = $this->helper->dataCheck($data->get_billing_first_name().$data->get_billing_last_name());
-		$billingAddress->city             = $this->helper->dataCheck(WC()->countries->states[$data->get_billing_country()][$data->get_billing_state()]);
+		$billingAddress->city             = isset(WC()->countries->states[$data->get_billing_country()][$data->get_billing_state()]) ? $this->helper->dataCheck(WC()->countries->states[$data->get_billing_country()][$data->get_billing_state()]) : 'NONE';
 		$billingAddress->country          = $this->helper->dataCheck(WC()->countries->countries[$data->get_billing_country()]);
 
 		return $billingAddress;
@@ -159,6 +165,22 @@ class Iyzico_Checkout_For_WooCommerce_FormObjectGenerate {
             }
 
 			$product 	= wc_get_product($productId);
+			$productCategories = wc_get_product_category_list($productId);
+
+			$siteName = get_option('blogname');
+      $productCategory = "BILINMEYEN-KATEGORI";
+			if(!empty($siteName))
+			{
+				$productCategory = $siteName ;
+			}
+
+      if($productCategories) {
+
+            $productCategory = strip_tags($productCategories);
+
+					}
+
+
 			$realPrice  = $this->helper->realPrice($product->get_sale_price(),$product->get_price());
 
 			if($realPrice && $realPrice != '0' && $realPrice != '0.0' && $realPrice != '0.00' && $realPrice != false) {
@@ -168,7 +190,7 @@ class Iyzico_Checkout_For_WooCommerce_FormObjectGenerate {
 				$basketItems[$keyNumber]->id                = $item['product_id'];
 				$basketItems[$keyNumber]->price             = $this->helper->priceParser(round($realPrice,2));
 				$basketItems[$keyNumber]->name              = $product->get_name();
-				$basketItems[$keyNumber]->category1         = 'TEST';
+				$basketItems[$keyNumber]->category1         = $productCategory;
 				$basketItems[$keyNumber]->itemType          = 'PHYSICAL';
 
 				$keyNumber++;

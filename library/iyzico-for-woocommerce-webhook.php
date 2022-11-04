@@ -65,6 +65,7 @@ class IyzicoWebhook{
     }
 
     public static function getIyziUrlId(){
+      
         if (!get_option(IYZICO_WEBHOOK_URL_KEY)){
             add_action( 'admin_notices', array( self::class, 'webhookAdminNoticeWarning') );
             return;
@@ -77,7 +78,7 @@ class IyzicoWebhook{
     public function iyzicoWebhookResponse(){
 
         $iyzicoGateway = new Iyzico_Checkout_For_WooCommerce_Gateway();
-        $responseCode = $iyzicoGateway->iyzico_response('webhook', $this->paymentConversationId, $this->token);
+        $responseCode = $iyzicoGateway->iyzico_response('webhook', $this->paymentConversationId, $this->token,$this->iyziEventType);
 
         return $responseCode;
     }
@@ -91,5 +92,3 @@ class IyzicoWebhook{
 
 
 }
-
-

@@ -8,8 +8,9 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
 
     public function __construct() {
 
+
         $this->id = 'iyzico';
-        $this->iyziV = '3.1.3';
+        $this->iyziV = '3.2.0';
         $this->method_title = __('iyzico Checkout', 'woocommerce-iyzico');
         $this->method_description = __('Best Payment Solution', 'woocommerce-iyzico');
         $this->has_fields = true;
@@ -24,9 +25,10 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
         $this->enabled      = $this->get_option( 'enabled' );
         $this->affiliate    = $this->get_option( 'affiliate_network' );
         $this->icon         = plugins_url().IYZICO_PLUGIN_NAME.'/image/cards.png?v=3';
-
         add_action('init', array(&$this, 'iyzico_response'));
+        add_action('admin_init', array($this , 'initIyzicoWebhookUrl') );
         add_action('woocommerce_api_wc_gateway_iyzico', array($this, 'iyzico_response'));
+        add_action( 'woocommerce_thankyou', array( $this, 'thankYouSubtitle' ), 5, 1 );
 
         add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array(
             $this,
@@ -40,6 +42,8 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
 
         add_action('woocommerce_receipt_iyzico', array($this, 'iyzico_loading_bar'));
         add_action('woocommerce_receipt_iyzico', array($this, 'iyzico_payment_form'));
+
+
 
 
 
@@ -127,7 +131,6 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
         $pluginUrl = plugins_url().IYZICO_PLUGIN_NAME;
 
         $html = '<style scoped>@media (max-width:768px){.iyziBrand{position:fixed;bottom:0;top:auto!important;right:0!important}}</style><div class="iyziBrandWrap"><div class="iyziBrand" style="clear:both;position:absolute;right: 50px;top:440px;display: flex;flex-direction: column;justify-content: center;"><img src='.$pluginUrl.'/image/iyzico_logo.png style="width: 250px;margin-left: auto;"><p style="text-align:center;"><strong>V: </strong>'.$this->iyziV.'</p></div></div>';
-
         echo $html;
     }
 
@@ -200,6 +203,8 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
         $setCookie = $this->setcookieSameSite($wooCommerceCookieKey,$_COOKIE[$wooCommerceCookieKey], time() + 86400, "/", $_SERVER['SERVER_NAME'],true, true);
 
         $this->versionCheck();
+
+
 
         global $woocommerce;
 
@@ -303,7 +308,7 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
 
     }
 
-    public function iyzico_response($webhook = null, $webhookPaymentConversationId = null, $webhookToken = null) {
+    public function iyzico_response($webhook = null, $webhookPaymentConversationId = null, $webhookToken = null, $webhookIyziEventType = null) {
 
         global $woocommerce;
 
@@ -337,8 +342,38 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
 
             $order = new WC_Order($requestResponse->basketId);
 
+
+
+
             if ($webhook == 'webhook' && $requestResponse->status == 'failure'){
                 return new WP_Error( $requestResponse->errorCode, $requestResponse->errorMessage, array( 'status' => 404 ) );
+            }
+
+            if($webhook == 'webhook')
+            {
+              if($webhookIyziEventType == 'CREDIT_PAYMENT_PENDING' && $requestResponse->paymentStatus == 'PENDING_CREDIT')
+              {
+                $orderMessage = 'Alışveriş kredisi başvurusu sürecindedir.';
+                $order->add_order_note($orderMessage,0,true);
+                $order->update_status("on-hold");
+                return http_response_code(200);
+              }
+              if($webhookIyziEventType == 'CREDIT_PAYMENT_AUTH' && $requestResponse->status == 'success')
+              {
+                 $orderMessage = 'Alışveriş kredisi işlemi başarıyla tamamlandı.';
+                 $order->add_order_note($orderMessage,0,true);
+                 $order->update_status("processing");
+                 return http_response_code(200);
+              }
+              if($webhookIyziEventType =='CREDIT_PAYMENT_INIT' && $requestResponse->status == 'INIT_CREDIT')
+              {
+                 $orderMessage = 'Alışveriş kredisi işlemi başlatıldı.';
+                 $order->add_order_note($orderMessage,0,true);
+                 $order->update_status("on-hold");
+                 return http_response_code(200);
+              }
+
+
             }
 
             if ($webhook == 'webhook' && $order->get_status() == 'processing'){
@@ -352,13 +387,28 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
             if($requestResponse->paymentStatus == 'INIT_BANK_TRANSFER' && $requestResponse->status == 'success') {
 
                 $order->update_status("on-hold");
-
                 $orderMessage = 'iyzico Banka havalesi/EFT ödemesi bekleniyor.';
                 $order->add_order_note($orderMessage,0,true);
-
                 $woocommerce->cart->empty_cart();
+                update_option('iyzico_thank_you',0);
                 $checkoutOrderUrl = $order->get_checkout_order_received_url();
                 $redirectUrl = add_query_arg(array('msg' => 'Thank You', 'type' => 'woocommerce-message'), $checkoutOrderUrl);
+                return wp_redirect($redirectUrl);
+            }
+            $thankYouPage = get_option('iyzico_thank_you');
+            if(!$thankYouPage)
+            {
+                add_option('iyzico_thank_you',0,'','no');
+            }
+            if($webhook != 'webhook' && $requestResponse->paymentStatus == 'PENDING_CREDIT' && $requestResponse->status == 'success') {
+
+                $order->update_status("on-hold");
+                $orderMessage = 'PAYMENT ID:'.$requestResponse->paymentId;
+                $order->add_order_note($orderMessage,0,true);
+                $woocommerce->cart->empty_cart();
+                $checkoutOrderUrl = $order->get_checkout_order_received_url();
+                update_option('iyzico_thank_you',1);
+                $redirectUrl = add_query_arg(array('msg' => 'Thank You', 'type' => 'woocommerce-message' ), $checkoutOrderUrl );
                 return wp_redirect($redirectUrl);
             }
 
@@ -374,11 +424,13 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
 
             $iyzico_order_insert  = $iyziModel->insertIyzicoOrder($iyzicoLocalOrder);
 
+
+
             if($requestResponse->paymentStatus != 'SUCCESS' || $requestResponse->status != 'success' || $orderId != $requestResponse->basketId ) {
 
                 if($requestResponse->status == 'success' && $requestResponse->paymentStatus == 'FAILURE') {
 
-                    throw new Exception.__("3D security has not been validated for your card.", 'woocommerce-iyzico');
+                    throw new  \Exception(__("3D security has not been validated for your card.", 'woocommerce-iyzico'));
 
                 }
                 /* Redirect Error */
@@ -404,8 +456,9 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
 
             }
 
-            $orderMessage = 'Payment ID: '.$requestResponse->paymentId;
 
+
+            $orderMessage = 'PAYMENT ID:'.$requestResponse->paymentId;
             $order->add_order_note($orderMessage,0,true);
 
             if($baseUrl == 'https://sandbox-api.iyzipay.com') {
@@ -445,14 +498,18 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
                 $order->update_status($orderStatus);
             }
 
-            if ($webhook == 'webhook'){
+
+            if($webhook == 'webhook'){
                 return http_response_code(200);
             }
 
             $woocommerce->cart->empty_cart();
-            $checkoutOrderUrl = $order->get_checkout_order_received_url();
+            update_option('iyzico_thank_you',0);
 
-            $redirectUrl = add_query_arg(array('msg' => 'Thank You', 'type' => 'woocommerce-message'), $checkoutOrderUrl);
+            $checkoutOrderUrl = $order->get_checkout_order_received_url();
+            $redirectUrl = add_query_arg(array('msg' => 'Thank You', 'type' => 'woocommerce-message' ), $checkoutOrderUrl);
+
+
 
             return wp_redirect($redirectUrl);
 
@@ -468,11 +525,106 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
             $order->add_order_note($respMsg,0,true);
 
             wc_add_notice(__($respMsg, 'woocommerce-message'), 'error');
+
             $redirectUrl = $woocommerce->cart->get_cart_url();
             return wp_redirect($redirectUrl);
         }
 
     }
+
+
+    /*ThankYou Page Edit */
+   public function thankYouSubtitle() {
+     $thankYouPage = get_option('iyzico_thank_you');
+
+     if($thankYouPage == 1)
+     {
+       $thankYouPageText = 'Alışveriş Kredisi için başvurunuz alınmıştır. Başvurunuz, en kısa sürede sonuçlandırılacaktır.';
+
+       $sh = '<h4><center>'.$thankYouPageText.'</center></h4><br></br>';
+       $sh .='<div class="tx_account"></div>';
+
+        echo $sh;
+
+     }
+
+       }
+
+    public function initIyzicoWebhookUrl() {
+
+        $initInstallWebhookUrl = get_option('init_active_webhook_url');
+        if(!$initInstallWebhookUrl){
+
+            add_option('init_active_webhook_url',0,'','no');
+        }
+
+        return self::initSetWebhookUrlKey();
+          }
+
+
+       /*Set Webhook request */
+    public function initSetWebhookUrlKey() {
+
+      $initInstallWebhookUrl = get_option('init_active_webhook_url');
+      $iyzicoWebhookUrlKey = IyzicoWebhook::getIyziUrlId();
+      if($initInstallWebhookUrl == 0)
+      {
+        if(isset($this->settings['api_key']) && isset($this->settings['secret_key']) && isset($_SERVER['HTTPS']) && isset($iyzicoWebhookUrlKey))
+      {
+
+          $pkiBuilder                 = new Iyzico_Checkout_For_WooCommerce_PkiBuilder();
+          $iyzicoRequest              = new Iyzico_Checkout_For_WooCommerce_iyzicoRequest();
+
+          $apiKey                     = $this->settings['api_key'];
+          $secretKey                  = $this->settings['secret_key'];
+          $baseUrl                    = $this->settings['api_type'];
+          $randNumer                  = rand(100000,99999999);
+
+          $setWebhookUrl = new stdClass();
+          $setWebhookUrl->webhookUrl        = get_site_url()."/wp-json/iyzico/v1/webhook/". IyzicoWebhook::getIyziUrlId();
+
+          $pkiString                = $pkiBuilder->pkiStringGenerate($setWebhookUrl);
+          $authorizationData        = $pkiBuilder->authorizationGenerate($pkiString,$apiKey,$secretKey,$randNumer);
+
+
+          $iyzicoJson               = json_encode($setWebhookUrl,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE);
+
+          $requestResponseWebhook          = $iyzicoRequest->iyzicoPostWebhookUrlKey($baseUrl,$iyzicoJson,$authorizationData);
+
+
+
+          if($requestResponseWebhook->merchantNotificationUpdateStatus == 'UPDATED' || $requestResponseWebhook->merchantNotificationUpdateStatus == 'CREATED')
+          {
+            update_option('init_active_webhook_url',1);
+            return true;
+          }
+          else {
+            update_option('init_active_webhook_url',2);
+            return false;
+          }
+      }
+         }
+      return true;
+       }
+
+       /* Submit Button Webhook */
+       public static function iyzicoWebhookSubmitbutton()
+      {
+        $initInstallWebhookUrl = get_option('init_active_webhook_url');
+        if($initInstallWebhookUrl == 2)
+        {
+          $htmlButton = '<form action="/" method="post">
+                        <button class="btn btn-light" type="submit" name="button">Aktifleştir</button> '.__('*Contact to activate webhook', 'woocommerce-iyzico').' <a href="mailto:entegrasyon@iyzico.com">entegrasyon@iyzico.com</a>
+                        </form>    ';
+          if(isset($_POST['button']))
+          {
+              update_option('init_active_webhook_url',0);
+          }
+          return $htmlButton;
+        }
+
+      }
+
 
     private function versionCheck() {
 

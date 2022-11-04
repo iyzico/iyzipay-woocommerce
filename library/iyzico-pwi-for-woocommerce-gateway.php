@@ -80,10 +80,9 @@ class Iyzico_Pwi_For_WooCommerce_Gateway extends WC_Payment_Gateway {
 
         $getOrder                  = new WC_Order($order_id);
 
+
         if ($getOrder->get_currency()!='TRY'){
-            update_post_meta( $order_id, '_payment_method_title', __('iyzico Checkout', 'woocommerce-iyzico') );
-            $iyzicoBuilder->iyzico_loading_bar();
-            $iyzicoBuilder->iyzico_payment_form($order_id,"coformviapwi");
+
             return;
         }
 

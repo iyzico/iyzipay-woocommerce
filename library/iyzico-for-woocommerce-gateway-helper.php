@@ -13,11 +13,11 @@ class Iyzico_Checkout_For_WooCommerce_Helper {
 		$itemSize = count($items);
 		if(!$itemSize) {
 
-			$price = $data->get_total();			
+			$price = $data->get_total();
 			$price = $this->priceParser($price);
-			
+
 			return $price;
-		} 
+		}
 
 
 		foreach ($items as  $item) {
@@ -88,7 +88,7 @@ class Iyzico_Checkout_For_WooCommerce_Helper {
 	public function trimString($address1,$address2) {
 
 		$address = trim($address1)." ".trim($address2);
-		
+
 		return $address;
 	}
 
@@ -114,4 +114,8 @@ class Iyzico_Checkout_For_WooCommerce_Helper {
 		return $salePrice;
 
 	}
+
+
+
+
 }
