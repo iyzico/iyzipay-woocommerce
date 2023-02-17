@@ -2,7 +2,7 @@
 Contributors: iyzico,mehmetselim,sozgat,feyzullahdemir
 Tags: payment, ecommerce,credit card,checkout woocommerce,iyzico,wordpress ecommerce
 Tested up to: 6.0
-Stable tag: 3.2.1
+Stable tag: 3.2.3
 Requires at least: 4.7
 Requires PHP: 5.4
 License: LGPL v3.0
@@ -56,10 +56,15 @@ Wordpress Marketplace in search "iyzico WooCommerce" and install
 6. Order List Page
 7. Order Management
 
-
 == Changelog ==
+
+= 3.2.3 =
+  * Fix : HTTPS CURL BUG
+
+
 = 3.2.1 =
   * Fix: HTTPS method
+
 
 = 3.2.0 =
   * Dev: shopping credit
@@ -67,7 +72,7 @@ Wordpress Marketplace in search "iyzico WooCommerce" and install
   * Fix: Failed payment callback
   * Fix: shipping method
 
-== Changelog ==
+
 = 3.1.3 =
   * Dev: Checkout and pwi language
   * Fix: Buyer Protection Logo
@@ -172,6 +177,9 @@ Wordpress Marketplace in search "iyzico WooCommerce" and install
 == Upgrade Notice ==
 
 == Changelog ==
+
+= 3.2.3 =
+  * Fix : HTTPS CURL BUG
 
 = 3.2.1 =
   * Fix: HTTPS method

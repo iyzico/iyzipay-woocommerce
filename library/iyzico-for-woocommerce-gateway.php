@@ -10,7 +10,7 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
 
 
         $this->id = 'iyzico';
-        $this->iyziV = '3.2.0';
+        $this->iyziV = '3.2.3';
         $this->method_title = __('iyzico Checkout', 'woocommerce-iyzico');
         $this->method_description = __('Best Payment Solution', 'woocommerce-iyzico');
         $this->has_fields = true;
