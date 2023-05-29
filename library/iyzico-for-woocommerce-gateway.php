@@ -10,7 +10,7 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
 
 
         $this->id = 'iyzico';
-        $this->iyziV = '3.2.3';
+        $this->iyziV = '3.2.4';
         $this->method_title = __('iyzico Checkout', 'woocommerce-iyzico');
         $this->method_description = __('Best Payment Solution', 'woocommerce-iyzico');
         $this->has_fields = true;
@@ -261,34 +261,7 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
             return $requestResponse->payWithIyzicoPageUrl;
         }
         $className                = $this->get_option('form_class');
-
-        if(empty($language))
-        {
-          if ($className == 'popup'){
-              $message                  = '<p id="infoBox" style="display:none;">' . __("Thank you for your order, please click the button below to pay with iyzico checkout.", 'woocommerce-iyzico') . '</p>';
-          }
-          else{
-              $message                  = '<p id="infoBox" style="display:none;">' . __('Thank you for your order, please enter your card information in the payment form below to pay with iyzico checkout.', 'woocommerce-iyzico') . '</p>';
-          }
-        }elseif ($language == 'TR' or $language == 'tr') {
-
-          if ($className == 'popup'){
-              $message                  = '<p id="infoBox" style="display:none;">' . 'Siparişiniz için teşekkür ederiz, iyzico ile ödemek için Ödeme Formunu Aç butonuna tıklayarak kart bilgilerinizi girebilirsiniz.'.'</p>';
-          }
-          else{
-              $message                  = '<p id="infoBox" style="display:none;">' . 'Siparişiniz için teşekkür ederiz, iyzico ile ödemek için aşağıdaki ödeme formu alanına kart bilgilerinizi girebilirsiniz.' . '</p>';
-          }
-
-        }else {
-          if ($className == 'popup'){
-              $message                  = '<p id="infoBox" style="display:none;">' . 'Thank you for your order, please click the button below to pay with iyzico checkout.'.'</p>';
-          }
-          else{
-              $message                  = '<p id="infoBox" style="display:none;">' . 'Thank you for your order, please enter your card information in the payment form below to pay with iyzico checkout.' . '</p>';
-          }
-
-        }
-
+        $message =  '<p id="infoBox" style="display:none;">' .$this->settings['payment_checkout_value']. '</p>';
 
 
         echo '<script>jQuery(window).on("load", function(){document.getElementById("loadingBar").style.display="none",document.getElementById("infoBox").style.display="block",document.getElementById("iyzipay-checkout-form").style.display="block"});</script>';
@@ -569,7 +542,7 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
       $iyzicoWebhookUrlKey = IyzicoWebhook::getIyziUrlId();
       if($initInstallWebhookUrl == 0)
       {
-        if(isset($this->settings['api_key']) && isset($this->settings['secret_key']) && isset($_SERVER['HTTPS']) && isset($iyzicoWebhookUrlKey))
+        if(isset($this->settings['api_key']) && isset($this->settings['secret_key'])  && isset($iyzicoWebhookUrlKey) && isset($_SERVER['HTTPS']))
       {
 
           $pkiBuilder                 = new Iyzico_Checkout_For_WooCommerce_PkiBuilder();
@@ -598,29 +571,29 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
             update_option('init_active_webhook_url',1);
             return true;
           }
-          else {
+          elseif ($requestResponseWebhook->merchantNotificationUpdateStatus == 'NOT_UPDATED') {
             update_option('init_active_webhook_url',2);
             return false;
+          }
+          else {
+            update_option('init_active_webhook_url',2);
           }
       }
          }
       return true;
        }
 
-       /* Submit Button Webhook */
-       public static function iyzicoWebhookSubmitbutton()
+       /* Submit  Webhook*/
+       public static function iyzicoWebhookSubmitbutton($submitSave = null)
       {
         $initInstallWebhookUrl = get_option('init_active_webhook_url');
         if($initInstallWebhookUrl == 2)
         {
-          $htmlButton = '<form action="/" method="post">
-                        <button class="btn btn-light" type="submit" name="button">Aktifleştir</button> '.__('*Contact to activate webhook', 'woocommerce-iyzico').' <a href="mailto:entegrasyon@iyzico.com">entegrasyon@iyzico.com</a>
-                        </form>    ';
-          if(isset($_POST['button']))
+          if($submitSave == 'submit')
           {
-              update_option('init_active_webhook_url',0);
+                return update_option('init_active_webhook_url',0);
           }
-          return $htmlButton;
+
         }
 
       }

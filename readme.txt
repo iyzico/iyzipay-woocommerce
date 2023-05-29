@@ -1,8 +1,8 @@
 === iyzico WooCommerce ===
 Contributors: iyzico,mehmetselim,sozgat,feyzullahdemir
 Tags: payment, ecommerce,credit card,checkout woocommerce,iyzico,wordpress ecommerce
-Tested up to: 6.0
-Stable tag: 3.2.3
+Tested up to: 6.2
+Stable tag: 3.2.4
 Requires at least: 4.7
 Requires PHP: 5.4
 License: LGPL v3.0
@@ -57,6 +57,11 @@ Wordpress Marketplace in search "iyzico WooCommerce" and install
 7. Order Management
 
 == Changelog ==
+
+= 3.2.4 =
+  * PWİ Currency USD
+  * WooCommerce + Wordpress latest version tested update
+
 
 = 3.2.3 =
   * Fix : HTTPS CURL BUG
@@ -177,6 +182,10 @@ Wordpress Marketplace in search "iyzico WooCommerce" and install
 == Upgrade Notice ==
 
 == Changelog ==
+
+= 3.2.4 =
+  * PWİ Currency USD
+  * WooCommerce + Wordpress latest version tested up
 
 = 3.2.3 =
   * Fix : HTTPS CURL BUG

@@ -11,10 +11,10 @@ class Iyzico_Checkout_For_WooCommerce_Fields {
 
         return $form_fields = array(
 
-				'webhook_description' => array(
-	 					'description' => "<span><b>Webhook URL </b>: ".get_site_url()."/wp-json/iyzico/v1/webhook/". IyzicoWebhook::getIyziUrlId()."</span><br></br>".Iyzico_Checkout_For_WooCommerce_Gateway::iyzicoWebhookSubmitbutton()."<br/><br/> ".__('Webhook Instructions', 'woocommerce-iyzico') ."  <a target='_blank' href='https://dev.iyzipay.com/tr/acik-kaynak/woocommerce'>iyzico webhooks</a>" ,
-	 					'type' => 'title'
-	 			),
+					'webhook_description' => array(
+			 					'description' => "<span><b>Webhook URL </b>: ".get_site_url()."/wp-json/iyzico/v1/webhook/". IyzicoWebhook::getIyziUrlId()."</span>".Iyzico_Checkout_For_WooCommerce_Gateway::iyzicoWebhookSubmitbutton('submit')."<br/><br/> ".__('Webhook Instructions', 'woocommerce-iyzico') ."  <a target='_blank' href='https://dev.iyzipay.com/tr/acik-kaynak/woocommerce'>iyzico webhooks</a>" ,
+			 					'type' => 'title'
+			 			),
 			 'api_type' => array(
 		        'title' 	=> __('Api Type', 'woocommerce-iyzico'),
 		        'type' 		=> 'select',
@@ -52,6 +52,13 @@ class Iyzico_Checkout_For_WooCommerce_Fields {
 		        'default' => 'popup',
 		        'options' => array('responsive' => __('Responsive', 'woocommerce-iyzico'), 'popup' => __('Popup', 'woocommerce-iyzico'))
 		    ),
+				'payment_checkout_value' => array(
+					 'title' => __('Payment Checkout Value', 'woocommerce-iyzico'),
+					 'type' => 'text',
+					      'description' => __('Ödeme formun yüklendiği sayfada gösterilen mesaj', 'woocommerce-iyzico'),
+								'default' => __('Thank you for your order, please click the button below to pay with iyzico checkout.', 'woocommerce-iyzico'),
+								'desc_tip' => true,
+			 ),
 		     'order_status' => array(
 		         'title' => __('Order Status', 'woocommerce-iyzico'),
 		         'type' => 'select',

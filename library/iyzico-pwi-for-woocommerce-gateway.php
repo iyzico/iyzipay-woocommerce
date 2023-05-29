@@ -80,11 +80,17 @@ class Iyzico_Pwi_For_WooCommerce_Gateway extends WC_Payment_Gateway {
 
         $getOrder                  = new WC_Order($order_id);
 
+         $getCurrency = array("TRY", "USD");
+
 
         if ($getOrder->get_currency()!='TRY'){
 
-            return;
+          if ($getOrder->get_currency()!='USD'){
+
+              return;
+          }
         }
+
 
         $getPwiGenerate = $iyzicoBuilder->iyzico_payment_form($order_id,"pwi");
         header("Location: ".$getPwiGenerate."");
