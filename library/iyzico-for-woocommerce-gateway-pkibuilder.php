@@ -100,6 +100,7 @@ public function pkiStringGenerate($objectData) {
 		$form_object->paidPrice   			= $objectData->paidPrice;
 		$form_object->forceThreeDS 			= $objectData->forceThreeDS;
 		$form_object->cardUserKey 			= $objectData->cardUserKey;
+		//$form_object->goBackUrl 			= $objectData->goBackUrl;
 
 		return $form_object;
 	}

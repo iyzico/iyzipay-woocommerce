@@ -41,7 +41,8 @@ class Iyzico_Checkout_For_WooCommerce_FormObjectGenerate {
 		$iyzico->forceThreeDS                 = "0";
 		$iyzico->callbackUrl                  = add_query_arg('wc-api', 'WC_Gateway_Iyzico', $data->get_checkout_order_received_url());
 		$iyzico->cardUserKey                  = $iyziModel->findUserCardKey($user->ID,$apiKey);
-		$iyzico->paymentSource                = 'WOOCOMMERCE|'.WOOCOMMERCE_VERSION.'|CARRERA-3.2.4'.$affiliate;
+		$iyzico->paymentSource                = 'WOOCOMMERCE|'.WOOCOMMERCE_VERSION.'|CARRERA-3.2.6'.$affiliate;
+		//$iyzico->goBackUrl                    = "test.php";
 
 
 		return $iyzico;
@@ -75,7 +76,7 @@ class Iyzico_Checkout_For_WooCommerce_FormObjectGenerate {
 		$iyzico->paymentGroup                 = 'PRODUCT';
 		$iyzico->callbackUrl                  = add_query_arg('wc-api', 'WC_Gateway_Iyzico', $data->get_checkout_order_received_url());
 		$iyzico->cancelUrl 					          = get_site_url();
-		$iyzico->paymentSource                = 'WOOCOMMERCE|'.WOOCOMMERCE_VERSION.'|CARRERA-PWI-3.2.4'.$affiliate;
+		$iyzico->paymentSource                = 'WOOCOMMERCE|'.WOOCOMMERCE_VERSION.'|CARRERA-PWI-3.2.6'.$affiliate;
 
 
 		return $iyzico;

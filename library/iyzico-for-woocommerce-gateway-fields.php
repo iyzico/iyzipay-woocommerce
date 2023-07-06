@@ -56,7 +56,7 @@ class Iyzico_Checkout_For_WooCommerce_Fields {
 					 'title' => __('Payment Checkout Value', 'woocommerce-iyzico'),
 					 'type' => 'text',
 					      'description' => __('Ödeme formun yüklendiği sayfada gösterilen mesaj', 'woocommerce-iyzico'),
-								'default' => __('Thank you for your order, please click the button below to pay with iyzico checkout.', 'woocommerce-iyzico'),
+								'default' => __('Thank you for your order, please enter your card information in the payment form below to pay with iyzico checkout.', 'woocommerce-iyzico'),
 								'desc_tip' => true,
 			 ),
 		     'order_status' => array(

@@ -5,11 +5,11 @@
  * Description: iyzico Payment Gateway for WooCommerce.
  * Author: iyzico
  * Author URI: https://iyzico.com
- * Version: 3.2.4
+ * Version: 3.2.6
  * Text Domain: iyzico WooCommerce
  * Domain Path: /i18n/languages/
  * WC requires at least: 3.0.0
- * WC tested up to: 7.5.1
+ * WC tested up to: 7.8.0
  */
 define('IYZICO_PATH',untrailingslashit( plugin_dir_path( __FILE__ )));
 define('IYZICO_LANG_PATH',plugin_basename(dirname(__FILE__)) . '/i18n/languages/');
@@ -50,7 +50,7 @@ if ( ! class_exists( 'Iyzico_For_WooCommerce' ) ) {
 
             $sql = "CREATE TABLE $table_name (
                 iyzico_order_id int(11) NOT NULL AUTO_INCREMENT,
-                payment_id  int(11) NOT NULL,
+                payment_id  bigint(11) NOT NULL,
                 order_id int(11) NOT NULL,
                 total_amount decimal( 10, 2 ) NOT NULL,
                 status varchar(20) NOT NULL,
@@ -71,6 +71,8 @@ if ( ! class_exists( 'Iyzico_For_WooCommerce' ) ) {
                PRIMARY KEY (iyzico_card_id)
             ) $charset_collate;";
             dbDelta($sql);
+
+
         }
 
         public static function IyzicoDeactive() {
@@ -93,10 +95,21 @@ if ( ! class_exists( 'Iyzico_For_WooCommerce' ) ) {
             flush_rewrite_rules();
         }
 
+        public static function paymentIdAlterTable(){
+          global $wpdb;
+          $table = $wpdb->prefix . 'iyzico_order';
+          $sql = "ALTER TABLE `{$table}`
+                MODIFY COLUMN `payment_id` bigint(11) NOT NULL;";
+          require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+          $query_result = $wpdb->query( $sql );
+        }
+
         public function init() {
 
             $this->InitIyzicoPaymentGateway();
             self::createIyzicoWebhookUrlKey();
+            self::paymentIdAlterTable();
+
 
         }
 
@@ -201,6 +214,11 @@ if ( ! class_exists( 'Iyzico_For_WooCommerce' ) ) {
 
 Iyzico_For_WooCommerce::get_instance();
 add_action('plugins_loaded',array('Iyzico_For_WooCommerce','installLanguage'));
+add_action( 'before_woocommerce_init', function() {
+    if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+        \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+	}
+} );
 register_activation_hook(__FILE__, array('Iyzico_For_WooCommerce','IyzicoActive'));
 register_deactivation_hook(__FILE__,array('Iyzico_For_WooCommerce','IyzicoDeactive'));
 }

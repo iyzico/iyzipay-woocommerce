@@ -10,7 +10,7 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
 
 
         $this->id = 'iyzico';
-        $this->iyziV = '3.2.4';
+        $this->iyziV = '3.2.6';
         $this->method_title = __('iyzico Checkout', 'woocommerce-iyzico');
         $this->method_description = __('Best Payment Solution', 'woocommerce-iyzico');
         $this->has_fields = true;
@@ -57,6 +57,7 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
     public function getApiKey(){
         return $this->settings['api_key'];
     }
+
 
     public function admin_overlay_script() {
 
@@ -260,6 +261,7 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
 
             return $requestResponse->payWithIyzicoPageUrl;
         }
+
         $className                = $this->get_option('form_class');
         $message =  '<p id="infoBox" style="display:none;">' .$this->settings['payment_checkout_value']. '</p>';
 
@@ -287,6 +289,14 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
 
 
         try {
+          if(!isset($_POST['token']) && $webhook != 'webhook')
+          {
+            exit;
+          }
+          if(!isset($webhookToken) && $webhook == 'webhook')
+          {
+            exit;
+          }
 
             $token           = $_POST['token'];
             $apiKey          = $this->settings['api_key'];
@@ -313,6 +323,10 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
             $tokenDetailObject         = json_encode($tokenDetailObject,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE);
             $requestResponse           = $iyzicoRequest->iyzicoCheckoutFormDetailRequest($baseUrl,$tokenDetailObject,$authorizationData);
 
+            if(!isset($requestResponse->basketId))
+            {
+      				exit;
+      			}
             $order = new WC_Order($requestResponse->basketId);
 
 
@@ -457,8 +471,8 @@ class Iyzico_Checkout_For_WooCommerce_Gateway extends WC_Payment_Gateway {
                 $order->add_item( $item_fee );
                 $order->calculate_totals(true);
 
-                update_post_meta($order_id, 'iyzico_no_of_installment',$requestResponse->installment);
-                update_post_meta($order_id, 'iyzico_installment_fee', $installment_fee);
+                update_post_meta($orderId, 'iyzico_no_of_installment',$requestResponse->installment);
+                update_post_meta($orderId, 'iyzico_installment_fee', $installment_fee);
             }
 
 
