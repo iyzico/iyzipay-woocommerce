@@ -1,0 +1,75 @@
+{
+  "_readme": [
+    "This file locks the dependencies of your project to a known state",
+    "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+    "This file is @generated automatically"
+  ],
+  "content-hash": "9941d782137766f3f7d4a3d2b4aeee54",
+  "packages": [
+    {
+      "name": "iyzico/iyzipay-php",
+      "version": "v2.0.57",
+      "source": {
+        "type": "git",
+        "url": "https://github.com/iyzico/iyzipay-php.git",
+        "reference": "b20fbd7bef67f133fc113354d8f3a3a73a8ffff5"
+      },
+      "dist": {
+        "type": "zip",
+        "url": "https://api.github.com/repos/iyzico/iyzipay-php/zipball/b20fbd7bef67f133fc113354d8f3a3a73a8ffff5",
+        "reference": "b20fbd7bef67f133fc113354d8f3a3a73a8ffff5",
+        "shasum": ""
+      },
+      "require": {
+        "ext-curl": "*",
+        "php": ">=7.4.0"
+      },
+      "require-dev": {
+        "phpunit/phpunit": "~9.6",
+        "satooshi/php-coveralls": "~0.6.1"
+      },
+      "type": "library",
+      "autoload": {
+        "psr-4": {
+          "Iyzipay\\": "src/Iyzipay/"
+        }
+      },
+      "notification-url": "https://packagist.org/downloads/",
+      "license": [
+        "MIT"
+      ],
+      "authors": [
+        {
+          "name": "iyzico and contributors",
+          "homepage": "https://github.com/iyzico/iyzipay-php/contributors"
+        }
+      ],
+      "description": "iyzipay api php client",
+      "homepage": "https://www.iyzico.com",
+      "keywords": [
+        "iyzico",
+        "iyzico.com",
+        "iyzipay",
+        "iyzipay api",
+        "iyzipay api php",
+        "iyzipay api php client",
+        "iyzipay php",
+        "payment processing"
+      ],
+      "support": {
+        "issues": "https://github.com/iyzico/iyzipay-php/issues",
+        "source": "https://github.com/iyzico/iyzipay-php/tree/v2.0.57"
+      },
+      "time": "2024-10-17T12:48:04+00:00"
+    }
+  ],
+  "packages-dev": [],
+  "aliases": [],
+  "minimum-stability": "stable",
+  "stability-flags": {},
+  "prefer-stable": false,
+  "prefer-lowest": false,
+  "platform": {},
+  "platform-dev": {},
+  "plugin-api-version": "2.6.0"
+}
