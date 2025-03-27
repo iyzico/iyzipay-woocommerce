@@ -1,0 +1,175 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2022-05-16 10:26+0000\n"
+"PO-Revision-Date: 2023-04-03 08:48+0000\n"
+"Last-Translator: \n"
+"Language-Team: English (United States)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: en_US\n"
+"Report-Msgid-Bugs-To: \n"
+"X-Loco-Version: 2.6.3; wp-6.3-alpha-55617"
+
+# This file is distributed under the GNU General Public License v2 or later.
+msgid "Environment"
+msgstr "Environment"
+
+msgid "API Key"
+msgstr "API Key"
+
+msgid "Secret Key"
+msgstr "Secret Key"
+
+msgid "Payment Value"
+msgstr "Payment Value"
+
+msgid "Payment Form Description Value"
+msgstr "Payment Form Description Value"
+
+msgid "Enable/Disable"
+msgstr "Enable/Disable"
+
+msgid "Enable iyzico Checkout Form"
+msgstr "Enable iyzico Checkout Form"
+
+msgid "Payment Form Design"
+msgstr "Payment Form Design"
+
+msgid "Left"
+msgstr "Bottom Left"
+
+msgid "Right"
+msgstr "Bottom Right"
+
+msgid "Hide"
+msgstr "Hide"
+
+msgid "Installment Commission"
+msgstr "Installment Commission"
+
+msgid "This message will show to the user during checkout."
+msgstr "This message will show to the user during checkout."
+
+msgid "Pay with your credit card or debit card via iyzico."
+msgstr "Pay with your credit card or debit card via iyzico."
+
+msgid "Thank you for your order, please enter your card information in the payment form below to pay with iyzico checkout."
+msgstr "Thank you for your order, please enter your card information in the payment form below to pay with iyzico checkout."
+
+msgid "Pay with Credit/Bank Card"
+msgstr "Pay with Credit/Bank Card"
+
+msgid "Order Status"
+msgstr "Order Status"
+
+msgid "Recommended, Default"
+msgstr "Recommended, Default"
+
+msgid "Default"
+msgstr "Default"
+
+msgid "Pending"
+msgstr "Pending"
+
+msgid "Processing"
+msgstr "Processing"
+
+msgid "On-Hold"
+msgstr "On-Hold"
+
+msgid "Completed"
+msgstr "Completed"
+
+msgid "Cancelled"
+msgstr "Cancelled"
+
+msgid "Refunded"
+msgstr "Refunded"
+
+msgid "Failed"
+msgstr "Failed"
+
+msgid "Select"
+msgstr "Select"
+
+msgid "Pay with iyzico"
+msgstr "Pay with iyzico"
+
+msgid "Best Payment Solution"
+msgstr "Best Payment Solution for The Best Businesses"
+
+msgid "Buyer Protection - Logo"
+msgstr "Buyer Protection - Logo"
+
+msgid "Pay with Bank/Debit Card"
+msgstr "Pay with Bank/Debit Card"
+
+msgid "iyzico Checkout"
+msgstr "iyzico Checkout"
+
+msgid "Support"
+msgstr "Support"
+
+msgid "Turkish"
+msgstr "Turkish"
+
+msgid "English"
+msgstr "English"
+
+msgid "This controls the description which the user sees during checkout."
+msgstr "This controls the description which the user sees during checkout."
+
+msgid "Payment Checkout Value"
+msgstr "Payment Checkout Message "
+
+msgid "Your money safe with iyzico! Store your iyzico card and enjoy one-click payment. All your transactions under the iyzico Buyer Protection guarantee. Get live support 24/7."
+msgstr "Your money safe with iyzico! Store your iyzico card and enjoy one-click payment. All your transactions under the iyzico Buyer Protection guarantee. Get live support 24/7."
+
+msgid "Error"
+msgstr "Error"
+
+msgid "This order will be processed on the iyzico payment page."
+msgstr "This order will be processed on the iyzico payment page."
+
+msgid "Payment token is missing. Please try again or contact the store owner if the problem persists."
+msgstr "Payment token is missing. Please try again or contact the store owner if the problem persists."
+
+msgid "Payment process failed. Please try again or choose a different payment method."
+msgstr "Payment process failed. Please try again or choose a different payment method."
+
+msgid "An unknown error occurred during the payment process. Please try again."
+msgstr "An unknown error occurred during the payment process. Please try again."
+
+msgid "Currently in the process of applying for a shopping loan."
+msgstr "Currently in the process of applying for a shopping loan."
+
+msgid "The shopping credit transaction has been initiated."
+msgstr "The shopping credit transaction has been initiated."
+
+msgid "Refunded %s"
+msgstr "Refunded %s"
+
+msgid "The shopping loan transaction was completed successfully."
+msgstr "The shopping loan transaction was completed successfully."
+
+msgid "The bank transfer transaction was completed successfully."
+msgstr "The bank transfer transaction was completed successfully."
+
+msgid "The balance payment transaction was completed successfully."
+msgstr "The balance payment transaction was completed successfully."
+
+msgid "The BKM Express transaction was completed successfully."
+msgstr "The BKM Express transaction was completed successfully."
+
+msgid "iyzico Bank transfer/EFT payment is pending."
+msgstr "iyzico Bank transfer/EFT payment is pending."
+
+msgid "Payment Form Language"
+msgstr "Payment Form Language"
+
+msgid "This payment was confirmed via webhook."
+msgstr "This payment was confirmed via webhook."
