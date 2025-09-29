@@ -2,7 +2,7 @@
 Contributors: iyzico,mehmetselim,sozgat,feyzullahdemir,tarikkamat
 Tags: payment, ecommerce, credit card, checkout woocommerce, iyzico
 Tested up to: 6.8
-Stable tag: 3.5.26
+Stable tag: 3.5.27
 Requires at least: 6.6.2
 Requires PHP: 7.4.33
 License: LGPL v3.0
@@ -59,6 +59,9 @@ Wordpress Marketplace in search "iyzico WooCommerce" and install
 7. Order Management
 
 == Changelog ==
+
+= 3.5.27 =
+  * Fix : Bug fix
 
 = 3.5.26 =
   * Feature: Buyer Protected v2
@@ -276,6 +279,9 @@ Wordpress Marketplace in search "iyzico WooCommerce" and install
 == Upgrade Notice ==
 
 == Changelog ==
+
+= 3.5.27 =
+  * Fix : Bug fix
 
 = 3.5.26 =
   * Feature: Buyer Protected v2
