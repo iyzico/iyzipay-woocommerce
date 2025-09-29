@@ -2,30 +2,11 @@
 
 namespace Iyzico\IyzipayWoocommerce\Common\Interfaces;
 
-/**
- * Interface LoggerInterface
- *
- * @package Iyzico\IyzipayWoocommerce\Common\Interfaces
- */
-interface LoggerInterface {
-	/**
-	 * @param string $message
-	 *
-	 * @return void
-	 */
-	public function info( string $message ): void;
+interface LoggerInterface
+{
+    public function info(string $message);
 
-	/**
-	 * @param string $message
-	 *
-	 * @return void
-	 */
-	public function error( string $message ): void;
+    public function error(string $message);
 
-	/**
-	 * @param string $message
-	 *
-	 * @return void
-	 */
-	public function warn( string $message ): void;
+    public function warn(string $message);
 }

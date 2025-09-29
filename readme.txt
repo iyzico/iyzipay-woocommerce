@@ -1,12 +1,14 @@
-=== iyzico WooCommerce ===
+=== iyzico for WooCommerce ===
 Contributors: iyzico,mehmetselim,sozgat,feyzullahdemir,tarikkamat
 Tags: payment, ecommerce, credit card, checkout woocommerce, iyzico
-Tested up to: 6.6.2
-Stable tag: 3.5.7
+Tested up to: 6.8
+Stable tag: 3.5.26
 Requires at least: 6.6.2
-Requires PHP: 8.0
+Requires PHP: 7.4.33
 License: LGPL v3.0
 License URI: https://www.gnu.org/licenses/lgpl-3.0.en.html
+
+iyzico latest payment processing solution. Accept credit/debit cards, alternative digital wallets and bank accounts.
 
 == Description ==
 - This is a WooCommerce module developed by iyzico Integration team.
@@ -36,7 +38,7 @@ Check out some of other advantages of iyzico WooCommerce Modul from below;
 
 
 Requirements
-PHP 8.0 and greater.
+PHP 7.4.33 and greater.
 cURL
 WooCommerce 9.0.0 requires WordPress 6.6.2+
 
@@ -57,6 +59,69 @@ Wordpress Marketplace in search "iyzico WooCommerce" and install
 7. Order Management
 
 == Changelog ==
+
+= 3.5.26 =
+  * Feature: Buyer Protected v2
+  * Fix : Bug fix
+
+= 3.5.25 =
+  * Fix : Bug fix
+
+= 3.5.24 =
+  * Fix : Bug fix
+
+= 3.5.23 =
+  * Fix : Bug fix
+  * Feature : Google XML
+
+= 3.5.22 =
+  * Fix : Bug fix
+  * Feature : Google XML
+
+= 3.5.21 =
+  * Fix : Bug fix
+
+= 3.5.20 =
+  * Fix : Bug fix
+
+= 3.5.19 =
+  * Fix : Table migration
+
+= 3.5.18 =
+  * Fix : Table migration
+
+= 3.5.17 =
+  * Fix : Table migration
+
+= 3.5.16 =
+  * Fix : Table migration
+
+= 3.5.15 =
+  * Fix : Table migration
+
+= 3.5.14 =
+  * Fix : Table migration
+
+= 3.5.13 =
+  * Fix : Table migration
+
+= 3.5.12 =
+  * Fix : Table migration
+
+= 3.5.11 =
+  * Fix : Table bug fixes
+
+= 3.5.10 =
+  * Fix : Table bug fixes
+
+= 3.5.9 =
+  * Fix : Table bug fixes
+
+= 3.5.8 =
+  * New : X-Iyz-Signature-V3 added.
+  * New : Response Signature Validation added.
+  * Fix : Composite product support
+  * WooCommerce + Wordpress latest version tested update
 
 = 3.5.7 =
   * Fix : The amount sent must be equal to the total amount of all breakdowns
@@ -211,6 +276,69 @@ Wordpress Marketplace in search "iyzico WooCommerce" and install
 == Upgrade Notice ==
 
 == Changelog ==
+
+= 3.5.26 =
+  * Feature: Buyer Protected v2
+  * Fix : Bug fix
+  
+= 3.5.25 =
+  * Fix : Bug fix
+
+= 3.5.24 =
+  * Fix : Bug fix
+
+= 3.5.23 =
+  * Fix : Bug fix
+  * Feature : Google XML
+
+= 3.5.22 =
+  * Fix : Bug fix
+  * Feature : Google XML
+
+= 3.5.21 =
+  * Fix : Bug fix
+
+= 3.5.20 =
+  * Fix : Bug fix
+
+= 3.5.19 =
+  * Fix : Table migration
+
+= 3.5.18 =
+  * Fix : Table migration
+
+= 3.5.17 =
+  * Fix : Table migration
+
+= 3.5.16 =
+  * Fix : Table migration
+
+= 3.5.15 =
+  * Fix : Table migration
+
+= 3.5.14 =
+  * Fix : Table migration
+
+= 3.5.13 =
+  * Fix : Table migration
+
+= 3.5.12 =
+  * Fix : Table migration
+
+= 3.5.11 =
+  * Fix : Table bug fixes
+
+= 3.5. =
+  * Fix : Table bug fixes
+
+= 3.5.10 =
+  * Fix : Table bug fixes
+
+= 3.5.8 =
+  * New : X-Iyz-Signature-V3 added.
+  * New : Response Signature Validation added.
+  * Fix : Composite product support
+  * WooCommerce + Wordpress latest version tested update
 
 = 3.5.7 =
 * Fix : The amount sent must be equal to the total amount of all breakdowns

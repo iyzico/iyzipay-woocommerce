@@ -2,108 +2,41 @@
 
 namespace Iyzico\IyzipayWoocommerce\Admin;
 
-use Iyzico\IyzipayWoocommerce\Checkout\CheckoutSettings;
-use Iyzico\IyzipayWoocommerce\Pwi\PwiSettings;
-use Iyzico\IyzipayWoocommerce\Rest\RestAPI;
+class SettingsPage
+{
+    public function getHtmlContent()
+    {
+        $logo_url = esc_url(PLUGIN_URL).'/assets/images/iyzico_logo.png';
 
-class SettingsPage {
-
-	private $checkoutSettings;
-	private $pwiSettings;
-	private $restApi;
-
-	public function __construct() {
-		$this->checkoutSettings = new CheckoutSettings();
-		$this->pwiSettings      = new PwiSettings();
-		$this->restApi          = new RestAPI();
-	}
-
-	public function renderAdminOptions() {
-		?>
-        <style>
-            .woocommerce-save-button {
-                display: none !important;
+        $html = '<style>
+            @media (max-width:768px){.iyziBrand{position:fixed;bottom:0;top:auto!important;right:0!important}}
+            .iyziBrandLogo {
+                background-image: url("'.$logo_url.'");
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position: center;
+                width: 250px;
+                height: 100px;
+                margin-left: auto;
             }
         </style>
-        <h3>
-			<?php esc_html_e( 'These payment method settings are made through the admin menu.', 'woocommerce-iyzico' ); ?>
-            <a href="<?php echo esc_url( admin_url( 'admin.php?page=iyzico' ) ); ?>">
-				<?php esc_html_e( 'Click to go to settings.', 'woocommerce-iyzico' ); ?>
-            </a>
-        </h3>
-		<?php
-	}
+        <div class="iyziBrandWrap">
+            <div class="iyziBrand" style="clear:both;position:absolute;right: 50px;top:440px;display: flex;flex-direction: column;justify-content: center;">
+                <div class="iyziBrandLogo"></div>
+                <p style="text-align:center;"><strong>Version: </strong>'.esc_html(IYZICO_PLUGIN_VERSION).'</p>
+            </div>
+        </div>
+       ';
 
-	public function renderPage(): void {
-		include_once PLUGIN_DIR_PATH . 'views/index.php';
-	}
+        $allowed_html = [
+            'style' => [],
+            'div' => ['class' => [], 'id' => [], 'style' => []],
+            'p' => ['style' => []],
+            'strong' => [],
+            'button' => ['type' => [], 'id' => [], 'class' => []],
+            'script' => [],
+        ];
 
-	public function addAdminMenu(): void {
-		add_menu_page(
-			'iyzico',
-			'iyzico',
-			'manage_options',
-			'iyzico',
-			[ $this, 'renderPage' ],
-			PLUGIN_URL . '/assets/images/icon.png',
-			59
-		);
-	}
-
-	public function enqueueAdminAssets( $hook ): void {
-		if ( 'toplevel_page_iyzico' !== $hook ) {
-			return;
-		}
-
-		$this->enqueueAdminScript();
-		$this->enqueueAdminStyle();
-	}
-
-	public function enqueueAdminStyle(): void {
-		$asset_file = PLUGIN_DIR_PATH . 'assets/admin/index.asset.php';
-
-		if ( ! file_exists( $asset_file ) ) {
-			return;
-		}
-
-		$asset = include $asset_file;
-
-		wp_enqueue_style(
-			'AdminStyle',
-			plugins_url( 'assets/admin/index.css', PLUGIN_BASEFILE ),
-			array_filter(
-				$asset['dependencies'],
-				function ( $style ) {
-					return wp_style_is( $style, 'registered' );
-				}
-			),
-			$asset['version']
-		);
-	}
-
-	public function enqueueAdminScript(): void {
-		$asset_file = PLUGIN_DIR_PATH . 'assets/admin/index.asset.php';
-
-		if ( ! file_exists( $asset_file ) ) {
-			return;
-		}
-
-		$asset = include $asset_file;
-
-		wp_enqueue_script(
-			'AdminScript',
-			plugins_url( 'assets/admin/index.js', PLUGIN_BASEFILE ),
-			$asset['dependencies'],
-			$asset['version'],
-			true  // Corrected line
-		);
-
-		wp_set_script_translations(
-			'AdminScript', // script handle
-			'woocommerce-iyzico',         // text domain
-			plugin_dir_path( __FILE__ ) . 'i18n/languages'
-		);
-
-		$this->restApi->localizeScript();
-	}
+        echo wp_kses($html, $allowed_html);
+    }
 }

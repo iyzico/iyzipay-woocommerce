@@ -2,38 +2,42 @@
 
 namespace Iyzico\IyzipayWoocommerce\Common\Hooks;
 
-use Iyzico\IyzipayWoocommerce\Admin\SettingsPage;
 use Iyzico\IyzipayWoocommerce\Checkout\CheckoutForm;
-use Iyzico\IyzipayWoocommerce\Common\Helpers\BuyerProtection;
 use Iyzico\IyzipayWoocommerce\Pwi\Pwi;
 
-class AdminHooks {
+class AdminHooks
+{
+    private $checkoutForm = null;
+    private $pwi = null;
 
-	private $page;
-	private $checkoutForm;
-	private $pwi;
-	private $buyerProtection;
+    public function register(): void
+    {
+        add_action('woocommerce_update_options_payment_gateways_iyzico', function () {
+            $this->getCheckoutForm()->process_admin_options();
+        });
 
-	public function __construct() {
-		$this->page            = new SettingsPage();
-		$this->checkoutForm    = new CheckoutForm();
-		$this->buyerProtection = new BuyerProtection();
-		$this->pwi             = new Pwi();
-	}
+        add_action('woocommerce_update_options_payment_gateways_pwi', function () {
+            $this->getPwi()->process_admin_options();
+        });
 
-	public function register(): void {
-		add_action( 'admin_menu', [ $this->page, 'addAdminMenu' ] );
-		add_action( 'admin_enqueue_scripts', [ $this->page, 'enqueueAdminAssets' ] );
+        add_action('woocommerce_update_options_payment_gateways_iyzico', function () {
+            $this->getCheckoutForm()->admin_overlay_script();
+        });
+    }
 
-		add_action( 'woocommerce_update_options_payment_gateways_' . $this->checkoutForm->id, [
-			$this->checkoutForm,
-			'process_admin_options'
-		] );
-		add_action( 'woocommerce_update_options_payment_gateways_' . $this->checkoutForm->id, [
-			$this->checkoutForm,
-			'admin_overlay_script'
-		] );
-	}
+    private function getCheckoutForm()
+    {
+        if ($this->checkoutForm === null) {
+            $this->checkoutForm = new CheckoutForm();
+        }
+        return $this->checkoutForm;
+    }
 
-
+    private function getPwi()
+    {
+        if ($this->pwi === null) {
+            $this->pwi = new Pwi();
+        }
+        return $this->pwi;
+    }
 }

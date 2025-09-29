@@ -58,7 +58,7 @@ msgid "Installment"
 msgstr "Taksit"
 
 msgid "Installment Commission"
-msgstr "Taksit Vade Komisyonu"
+msgstr "Taksit Komisyonu"
 
 msgid "This message will show to the user during checkout."
 msgstr "Bu mesaj ödeme sırasında kullanıcıya gösterecektir."
@@ -277,3 +277,24 @@ msgstr "Alışveriş kredisi işlemi başlatıldı."
 
 msgid "Refunded %s"
 msgstr "İade edildi %s"
+
+msgid "The bank transfer transaction was completed successfully."
+msgstr "Banka transfer işlemi başarıyla tamamlandı."
+
+msgid "The balance payment transaction was completed successfully."
+msgstr "Bakiye ödeme işlemi başarıyla tamamlandı."
+
+msgid "The BKM Express transaction was completed successfully."
+msgstr "BKM Express işlemi başarıyla tamamlandı."
+
+msgid "iyzico Bank transfer/EFT payment is pending."
+msgstr "iyzico Banka transferi/EFT ödemesi bekleniyor."
+
+msgid "Enable Pay with iyzico"
+msgstr "iyzico ile öde aktifleştir"
+
+msgid "Cargo Campaign"
+msgstr "Kargo Kampanyası"
+
+msgid "Enable Cargo Campaign"
+msgstr "Kargo Kampanyası Aktifleştir"

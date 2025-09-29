@@ -262,3 +262,27 @@ msgstr "The shopping credit transaction has been initiated."
 
 msgid "Refunded %s"
 msgstr "Refunded %s"
+
+msgid "The shopping loan transaction was completed successfully."
+msgstr "The shopping loan transaction was completed successfully."
+
+msgid "The bank transfer transaction was completed successfully."
+msgstr "The bank transfer transaction was completed successfully."
+
+msgid "The balance payment transaction was completed successfully."
+msgstr "The balance payment transaction was completed successfully."
+
+msgid "The BKM Express transaction was completed successfully."
+msgstr "The BKM Express transaction was completed successfully."
+
+msgid "iyzico Bank transfer/EFT payment is pending."
+msgstr "iyzico Bank transfer/EFT payment is pending."
+
+msgid "Enable Pay with iyzico"
+msgstr "Enable Pay with iyzico"
+
+msgid "Cargo Campaign"
+msgstr "Cargo Campaign"
+
+msgid "Enable Cargo Campaign"
+msgstr "Enable Cargo Campaign"
