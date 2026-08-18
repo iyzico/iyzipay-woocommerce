@@ -3,165 +3,259 @@
 namespace Iyzico\IyzipayWoocommerce\Pwi;
 
 use Exception;
-use Iyzico\IyzipayWoocommerce\Common\Helpers\RefundProcessor;
-use WC_Payment_Gateway;
+use Iyzico\IyzipayWoocommerce\Admin\SettingsPage;
 use Iyzico\IyzipayWoocommerce\Checkout\CheckoutSettings;
 use Iyzico\IyzipayWoocommerce\Common\Helpers\CookieManager;
 use Iyzico\IyzipayWoocommerce\Common\Helpers\DataFactory;
 use Iyzico\IyzipayWoocommerce\Common\Helpers\Logger;
-use Iyzico\IyzipayWoocommerce\Common\Helpers\PaymentProcessor;
 use Iyzico\IyzipayWoocommerce\Common\Helpers\PriceHelper;
-use Iyzico\IyzipayWoocommerce\Common\Helpers\TlsVerifier;
+use Iyzico\IyzipayWoocommerce\Common\Helpers\RefundProcessor;
+use Iyzico\IyzipayWoocommerce\Common\Helpers\SignatureChecker;
 use Iyzico\IyzipayWoocommerce\Common\Helpers\VersionChecker;
 use Iyzico\IyzipayWoocommerce\Database\DatabaseManager;
-use Iyzipay\Options;
 use Iyzipay\Model\PayWithIyzicoInitialize;
+use Iyzipay\Options;
 use Iyzipay\Request\CreatePayWithIyzicoInitializeRequest;
+use WC_Payment_Gateway;
 
-class Pwi extends WC_Payment_Gateway {
+class Pwi extends WC_Payment_Gateway
+{
 
-	public $pwiSettings;
-	public $order;
-	public $form_fields;
-	public $logger;
-	public $cookieManager;
-	public $versionChecker;
-	public $tlsVerifier;
-	public $priceHelper;
-	public $databaseManager;
-	public $checkoutSettings;
-	public $pwiDataFactory;
-	public $paymentProcessor;
-	public $refundProcessor;
+    public $pwiSettings;
+    public $order;
+    public $form_fields;
+    public $logger;
+    public $cookieManager;
+    public $versionChecker;
+    public $priceHelper;
+    public $checkoutSettings;
+    public $pwiDataFactory;
+    public $refundProcessor;
+    public $signatureChecker;
+    public $adminSettings;
+    public $databaseManager;
 
-	public function __construct() {
-		$this->id                 = "pwi";
-		$this->method_title       = __( 'Pay with iyzico', 'woocommerce-iyzico' );
-		$this->method_description = __( 'Best Payment Solution', 'woocommerce-iyzico' );
-		$this->pwiSettings        = new PwiSettings();
-		$this->form_fields        = $this->pwiSettings->getFormFields();
-		$this->init_settings();
-		$settings = $this->pwiSettings->getSettings();
 
-		$this->enabled           = $settings['enabled'];
-		$this->title             = $settings['title'];
-		$this->description       = $settings['description'];
-		$this->order_button_text = $settings['button_text'] ?? '';
-		$this->icon              = $settings['icon'] ?? '';
-		$this->has_fields        = true;
-		$this->supports          = [
-			'products',
-			'refunds'
-		];
+    public function __construct()
+    {
+        $this->id = "pwi";
+        $this->method_title = 'Pay with iyzico';
+        $this->method_description = 'Best Payment Solution';
+        $this->pwiSettings = new PwiSettings();
+        $this->form_fields = $this->pwiSettings->getFormFields();
+        $this->init_settings();
+        $settings = $this->pwiSettings->getSettings();
+        $this->enabled = $settings['enabled'];
+        $this->title = $settings['title'];
+        $this->description = $settings['description'];
+        $this->order_button_text = $settings['button_text'] ?? '';
+        $this->icon = $settings['icon'] ?? '';
+        $this->has_fields = true;
+        $this->supports = [
+            'products',
+            'refunds'
+        ];
 
-		$this->logger           = new Logger();
-		$this->cookieManager    = new CookieManager();
-		$this->versionChecker   = new VersionChecker( $this->logger );
-		$this->tlsVerifier      = new TlsVerifier();
-		$this->priceHelper      = new PriceHelper();
-		$this->databaseManager  = new DatabaseManager();
-		$this->checkoutSettings = new CheckoutSettings();
+        $this->databaseManager = new DatabaseManager();
+        $this->logger = new Logger();
+        $this->cookieManager = new CookieManager();
+        $this->versionChecker = new VersionChecker();
+        $this->priceHelper = new PriceHelper();
+        $this->checkoutSettings = new CheckoutSettings();
+        $this->signatureChecker = new SignatureChecker();
+        $this->adminSettings = new SettingsPage();
 
-		$this->paymentProcessor = new PaymentProcessor(
-			$this->logger,
-			$this->priceHelper,
-			$this->cookieManager,
-			$this->versionChecker,
-			$this->tlsVerifier,
-			$this->checkoutSettings,
-			$this->databaseManager
-		);
+        $this->pwiDataFactory = new DataFactory();
+        $this->refundProcessor = new RefundProcessor();
+    }
 
-		$this->pwiDataFactory  = new DataFactory( $this->priceHelper, $this->checkoutSettings );
-		$this->refundProcessor = new RefundProcessor();
-	}
+    /**
+     * Get translated method title
+     * @return string
+     */
+    public function get_method_title()
+    {
+        return __('Pay with iyzico', 'iyzico-woocommerce');
+    }
 
-	public function process_payment( $order_id ) {
-		try {
-			$this->order = wc_get_order( $order_id );
-			$this->order->add_order_note( __( "This order will be processed on the iyzico payment page.", "woocommerce-iyzico" ) );
-			$pwiInitialize  = $this->create_payment( $order_id );
-			$paymentPageUrl = $pwiInitialize->getPayWithIyzicoPageUrl();
+    /**
+     * Get translated method description
+     * @return string
+     */
+    public function get_method_description()
+    {
+        return __('Best Payment Solution', 'iyzico-woocommerce');
+    }
 
-			return $this->redirect_to_iyzico( $paymentPageUrl );
-		} catch ( Exception $e ) {
-			wc_add_notice( $e->getMessage(), 'error' );
-		}
-	}
+    public function process_payment($order_id)
+    {
+        try {
+            $this->order = wc_get_order($order_id);
+            $this->order->set_payment_method('iyzico');
+            $this->order->add_order_note(__(
+                "This order will be processed on the iyzico payment page.",
+                "iyzico-woocommerce"
+            ));
 
-	public function process_refund( $order_id, $amount = null, $reason = '' ) {
-		return $this->refundProcessor->refund( $order_id, $amount );
-	}
+            $pwiInitialize = $this->create_payment($order_id);
+            if ($pwiInitialize->getStatus() !== 'failure') {
+                $paymentPageUrl = $pwiInitialize->getPayWithIyzicoPageUrl();
+                return $this->redirect_to_iyzico($paymentPageUrl);
+            }
+        } catch (Exception $e) {
+            wc_add_notice($e->getMessage(), 'error');
+        }
+    }
 
-	protected function create_payment( $orderId ) {
-		$this->versionChecker->check();
-		$this->cookieManager->setWooCommerceSessionCookie();
+    protected function create_payment($orderId)
+    {
+        $this->versionChecker->check();
+        $this->cookieManager->setWooCommerceSessionCookie();
 
-		global $woocommerce;
+        // Get WC, Customer, Cart, Order, Currency, Checkout Data, Price and PaidPrice
+        global $woocommerce;
+        $customer = wp_get_current_user();
+        $cart = $woocommerce->cart->get_cart();
+        $order = wc_get_order($orderId);
+        $checkoutData = $this->pwiDataFactory->prepareCheckoutData($customer, $order, $cart);
+        $currency = get_woocommerce_currency();
+        $price = $this->pwiDataFactory->createPrice($checkoutData['basketItems']);
+        $paidPrice = $this->priceHelper->priceParser(round($order->get_total(), 2));
+        $callbackUrl = add_query_arg('wc-api', 'iyzipay', $order->get_checkout_order_received_url());
+        $conversationId = uniqid(strval($orderId));
 
-		$order    = wc_get_order( $orderId );
-		$cart     = $woocommerce->cart->get_cart();
-		$language = $this->checkoutSettings->findByKey( 'form_language' ) ?? "tr";
-		$customer = wp_get_current_user();
+        // WooCommerce Session Settings
+        $woocommerce->session->set('conversationId', $conversationId);
+        $woocommerce->session->set('customerId', $customer->ID);
+        $woocommerce->session->set('totalAmount', $order->get_total());
 
-		$woocommerce->session->set( 'conversationId', $orderId );
-		$woocommerce->session->set( 'customerId', $customer->ID );
-		$woocommerce->session->set( 'totalAmount', $order->get_total() );
+        // Payment Source Settings
+        $paymentSource = "WOOCOMMERCE|$woocommerce->version|"."CARRERA-".IYZICO_PLUGIN_VERSION."|PWI";
+        $affiliate = $this->checkoutSettings->findByKey('affiliate_network');
+        if (strlen($affiliate) > 0) {
+            $paymentSource = "$paymentSource|$affiliate";
+        }
 
-		$currency = get_woocommerce_currency();
+        // Form Language Settings
+        $settingsLang = $this->checkoutSettings->findByKey('form_language');
+        if ($settingsLang === null || strlen($settingsLang) === 0 || $settingsLang === false) {
+            $language = "tr";
+        } else {
+            $language = strtolower($settingsLang);
+        }
 
-		// Payment Source Settings
-		$affiliate     = $this->checkoutSettings->findByKey( 'affiliate_network' );
-		$paymentSource = "WOOCOMMERCE|$woocommerce->version|CARRERA-PWI-3.5.7";
+        // Create Request
+        $request = new CreatePayWithIyzicoInitializeRequest();
+        $request->setLocale($language);
+        $request->setConversationId($conversationId);
+        $request->setPrice($price);
+        $request->setPaidPrice($paidPrice);
+        $request->setCurrency($currency);
+        $request->setBasketId($orderId);
+        $request->setPaymentGroup("PRODUCT");
+        $request->setPaymentSource($paymentSource);
+        $request->setCallbackUrl($callbackUrl);
 
-		if ( strlen( $affiliate ) > 0 ) {
-			$paymentSource = "$paymentSource|$affiliate";
-		}
+        // Prepare Checkout Data
+        $request->setBuyer($checkoutData['buyer']);
+        $request->setBillingAddress($checkoutData['billingAddress']);
+        isset($checkoutData['shippingAddress']) ? $request->setShippingAddress($checkoutData['shippingAddress']) : null;
+        $request->setBasketItems($checkoutData['basketItems']);
 
-		// Create Request
-		$request = new CreatePayWithIyzicoInitializeRequest();
-		$request->setLocale( $language );
-		$request->setConversationId( $orderId );
-		$request->setPrice( $this->priceHelper->subTotalPriceCalc( $cart, $order ) );
-		$request->setPaidPrice( $this->priceHelper->priceParser( round( $order->get_total(), 2 ) ) );
-		$request->setCurrency( $currency );
-		$request->setBasketId( $orderId );
-		$request->setPaymentGroup( "PRODUCT" );
-		$request->setPaymentSource( $paymentSource );
-		$request->setCallbackUrl( add_query_arg( 'wc-api', 'iyzipay', $order->get_checkout_order_received_url() ) );
+        // Create Options
+        $options = $this->create_options();
 
-		// Prepare Checkout Data
-		$checkoutData = $this->pwiDataFactory->prepareCheckoutData( $customer, $order, $cart );
-		$request->setBuyer( $checkoutData['buyer'] );
-		$request->setBillingAddress( $checkoutData['billingAddress'] );
-		$request->setShippingAddress( $checkoutData['shippingAddress'] );
-		$request->setBasketItems( $checkoutData['basketItems'] );
+        // Check Request Logs Settings
+        $isSave = $this->checkoutSettings->findByKey('request_log_enabled');
+        $isSave === 'yes' ? $this->logger->info("CheckoutFormInitialize Request: ".$request->toJsonString()) : null;
 
-		// Create Options
-		$options = $this->create_options();
+        // Payment Initialize Request Response
+        $response = PayWithIyzicoInitialize::create($request, $options);
 
-		// Check Request Logs Settings
-		$isSave = $this->checkoutSettings->findByKey( 'request_log_enabled' );
+        // Save iyzico Order Table
+        $token = $response->getToken();
+        $status = $response->getStatus();
 
-		$isSave === 'yes' ? $this->logger->info( "CheckoutFormInitialize Request: " . $request->toJsonString() ) : null;
+        $this->databaseManager->createOrUpdateOrder(
+            null,
+            $orderId,
+            $conversationId,
+            $token,
+            $paidPrice,
+            $status,
+            null
+        );
 
-		return PayWithIyzicoInitialize::create( $request, $options );
-	}
+        return $response;
+    }
 
-	public function redirect_to_iyzico( string $paymentPageUrl ) {
-		return [
-			'result'   => 'success',
-			'redirect' => $paymentPageUrl
-		];
-	}
+    protected function create_options(): Options
+    {
+        $options = new Options();
+        $options->setApiKey($this->checkoutSettings->findByKey('api_key'));
+        $options->setSecretKey($this->checkoutSettings->findByKey('secret_key'));
+        $options->setBaseUrl($this->checkoutSettings->findByKey('api_type'));
 
-	protected function create_options(): Options {
-		$options = new Options();
-		$options->setApiKey( $this->checkoutSettings->findByKey( 'api_key' ) );
-		$options->setSecretKey( $this->checkoutSettings->findByKey( 'secret_key' ) );
-		$options->setBaseUrl( $this->checkoutSettings->findByKey( 'api_type' ) );
+        return $options;
+    }
 
-		return $options;
-	}
+    public function redirect_to_iyzico(string $paymentPageUrl)
+    {
+        return [
+            'result' => 'success',
+            'redirect' => $paymentPageUrl
+        ];
+    }
 
+    public function process_refund($order_id, $amount = null, $reason = '')
+    {
+        return $this->refundProcessor->refund($order_id, $amount);
+    }
+
+    public function admin_options()
+    {
+        ob_start();
+        parent::admin_options();
+        $parent_options = ob_get_contents();
+        ob_end_clean();
+
+        $allowed_html = [
+            'form' => ['method' => [], 'action' => [], 'id' => [], 'class' => [], 'enctype' => []],
+            'nav' => ['class' => []],
+            'a' => ['href' => [], 'class' => [], 'aria-label' => [], 'target' => [], 'rel' => []],
+            'h1' => ['class' => []],
+            'h2' => ['class' => []],
+            'h3' => ['class' => [], 'id' => []],
+            'table' => ['class' => []],
+            'tbody' => [],
+            'tr' => ['valign' => []],
+            'th' => ['scope' => [], 'class' => []],
+            'td' => ['class' => []],
+            'fieldset' => [],
+            'legend' => ['class' => []],
+            'label' => ['for' => [], 'class' => []],
+            'input' => [
+                'type' => [], 'name' => [], 'value' => [], 'class' => [], 'id' => [], 'placeholder' => [],
+                'style' => [], 'checked' => [], 'maxlength' => []
+            ],
+            'select' => ['name' => [], 'class' => [], 'id' => [], 'style' => []],
+            'option' => ['value' => [], 'selected' => []],
+            'p' => ['class' => [], 'style' => []],
+            'strong' => [],
+            'span' => ['class' => [], 'aria-label' => [], 'tabindex' => []],
+            'button' => ['name' => [], 'class' => [], 'type' => [], 'value' => [], 'disabled' => []],
+            'input' => [
+                'type' => [], 'name' => [], 'value' => [], 'id' => [], 'class' => [], 'style' => [], 'checked' => [],
+                'maxlength' => []
+            ],
+            'div' => ['class' => [], 'id' => [], 'style' => []],
+            'img' => ['src' => [], 'style' => []],
+            'link' => ['rel' => [], 'href' => [], 'type' => []],
+            'script' => ['src' => [], 'type' => []],
+            'style' => [],
+        ];
+
+        echo wp_kses($parent_options, $allowed_html);
+        $this->adminSettings->getHtmlContent();
+    }
 }

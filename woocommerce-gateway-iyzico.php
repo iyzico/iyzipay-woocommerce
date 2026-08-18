@@ -1,55 +1,72 @@
 <?php
 
 /**
+ * iyzipay WooCommerce
+ *
+ * @package iyzico WooCommerce
+ * @author iyzico
+ * @copyright 2024 iyzico
+ * @license LGPL-3.0-or-later
+ *
+ * @wordpress-plugin
  * Plugin Name: iyzico WooCommerce
  * Plugin URI: https://wordpress.org/plugins/iyzico-woocommerce
  * Description: iyzico Payment Gateway for WooCommerce.
+ * Version: 3.5.29
+ * Requires at least: 6.6.2
+ * WC requires at least: 9.3.3
+ * Requires PHP: 7.4.33
  * Author: iyzico
  * Author URI: https://iyzico.com
- * Version: 3.5.7
- * Requires Plugins: woocommerce
- * Requires at least: 6.6.2
- * Tested up to: 6.6.2
- * WC requires at least: 9.0.0
- * WC tested up to: 9.3.3
- * Text Domain: iyzico WooCommerce
+ * Text Domain: iyzico-woocommerce
  * Domain Path: /i18n/languages/
- * Tags: payment gateway, WooCommerce, iyzico
+ * License: LGPL v3 or later
+ * License URI: http://www.gnu.org/licenses/lgpl-3.0.txt
+ * Update URI: https://wordpress.org/plugins/iyzico-woocommerce
+ * Requires Plugins: woocommerce
+ *
+ * Tested up to: 6.9
+ * WC tested up to: 9.7.1
  */
 
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 
 /**
  * Constants
  *
  * These constants are used to define the plugin version, base file, path, url and language path.
  */
-const PLUGIN_VERSION  = '3.5.7';
+const PLUGIN_VERSION = '3.5.29';
+const IYZICO_PLUGIN_VERSION = '3.5.29';
+const IYZICO_DB_VERSION = '3.5.28';
 const PLUGIN_BASEFILE = __FILE__;
 
-define( 'PLUGIN_PATH', untrailingslashit( plugin_dir_path( PLUGIN_BASEFILE ) ) );
-define( 'PLUGIN_URL', untrailingslashit( plugin_dir_url( PLUGIN_BASEFILE ) ) );
-define( 'PLUGIN_LANG_PATH', plugin_basename( dirname( PLUGIN_BASEFILE ) ) . '/i18n/languages/' );
-define( 'PLUGIN_ASSETS_DIR_URL', plugin_dir_url( __FILE__ ) . 'assets' );
-define( 'PLUGIN_DIR_PATH', plugin_dir_path( __FILE__ ) );
-define( 'PLUGIN_DIR_URL', plugin_dir_url( __FILE__ ) );
-define( 'WEBHOOK_URL_KEY', 'iyzicoWebhookUrlKey' );
+define('PLUGIN_PATH', untrailingslashit(plugin_dir_path(PLUGIN_BASEFILE)));
+define('PLUGIN_URL', untrailingslashit(plugin_dir_url(PLUGIN_BASEFILE)));
+define('PLUGIN_LANG_PATH', plugin_basename(dirname(PLUGIN_BASEFILE)).'/i18n/languages/');
+define('PLUGIN_ASSETS_DIR_URL', plugin_dir_url(__FILE__).'assets');
+define('PLUGIN_DIR_PATH', plugin_dir_path(__FILE__));
 
 /**
  * Composer Autoload
  * This is used to autoload the classes.
  */
-if ( file_exists( PLUGIN_PATH . '/vendor/autoload.php' ) ) {
-	require_once PLUGIN_PATH . '/vendor/autoload.php';
+if (file_exists(PLUGIN_PATH.'/vendor/autoload.php')) {
+    require_once PLUGIN_PATH.'/vendor/autoload.php';
 }
 
 /**
  * Plugin Activation and Deactivation
  */
-register_activation_hook( PLUGIN_BASEFILE, [ '\Iyzico\IyzipayWoocommerce\Core\Plugin', 'activate' ] );
-register_deactivation_hook( PLUGIN_BASEFILE, [ '\Iyzico\IyzipayWoocommerce\Core\Plugin', 'deactivate' ] );
+register_activation_hook(PLUGIN_BASEFILE, ['\Iyzico\IyzipayWoocommerce\Core\Plugin', 'activate']);
+register_deactivation_hook(PLUGIN_BASEFILE, ['\Iyzico\IyzipayWoocommerce\Core\Plugin', 'deactivate']);
+
+/**
+ * Handle plugin updates
+ */
+add_action('upgrader_process_complete', ['\Iyzico\IyzipayWoocommerce\Common\Helpers\PluginUpdateHandler', 'handlePluginUpdate'], 10, 2);
 
 /**
  * Initialize the plugin
  */
-add_action( 'plugins_loaded', [ '\Iyzico\IyzipayWoocommerce\Core\Plugin', 'init' ] );
+add_action('plugins_loaded', ['\Iyzico\IyzipayWoocommerce\Core\Plugin', 'init']);

@@ -1,0 +1,5 @@
+{
+    "require-dev": {
+        "iyzico/iyzipay-php": "^2.0"
+    }
+}

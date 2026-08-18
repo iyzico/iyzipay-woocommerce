@@ -1,42 +1,43 @@
-=== iyzico WooCommerce ===
+=== iyzico for WooCommerce ===
 Contributors: iyzico,mehmetselim,sozgat,feyzullahdemir,tarikkamat
 Tags: payment, ecommerce, credit card, checkout woocommerce, iyzico
-Tested up to: 6.6.2
-Stable tag: 3.5.7
+Tested up to: 6.9
+Stable tag: 3.5.29
 Requires at least: 6.6.2
-Requires PHP: 8.0
+Requires PHP: 7.4.33
 License: LGPL v3.0
 License URI: https://www.gnu.org/licenses/lgpl-3.0.en.html
 
+iyzico latest payment processing solution. Accept credit/debit cards, alternative digital wallets and bank accounts.
+
 == Description ==
-- This is a WooCommerce module developed by iyzico Integration team.
+- It is an open-source WooCommerce module developed by the iyzico integration team.
 
-- After the integration you will be able to use pay with iyzico (iyzico's alternative payment method) automatically
+- After completing your integration with this module, you can automatically use the Pay with iyzico option (iyzico's alternative payment method) and start accepting secure and fast payments on your e-commerce site.
 
-- You can easily integrate iyzico WooCommerce module into your e-commerce website and start receiving payment seamlessly and securely.
-Check out some of other advantages of iyzico WooCommerce Modul from below;
+- You can integrate the iyzico WooCommerce module into your site within minutes and provide a seamless and reliable payment experience. Some of the module's key advantages include:
 
-- You can embed iyzico check-out form either as responsive or pop-up onto your payment screen and increase your sales conversion.
+- You can increase your conversion rate by adding the iyzico Check-Out Form as responsive or popup.
 
-- The module controlled by SUCURI and it is totally secure.
+- Our plugin is regularly scanned by SUCURI and is completely secure.
 
-- With the open source code, you can make easily make new developments on your website.
+- Thanks to its open-source code structure, you can make customizations according to your development needs.
 
-- iyzico WooCommerce module supports SEO tools and is 100% compatible with Google.
+- It is compatible with SEO tools and works with 100% Google integration.
 
-- You can test your website in Sandbox, one of the best test environments.
+- It offers a Sandbox environment so you can comprehensively test your website before integration.
 
-- iyzico WooCommerce module allows you to sell with installments on your website.
+- With installment payment support, you can provide your customers with different payment options.
 
-- After iyzico WooCommerce integration, with iyzico’s Buyer Protection feature you can offer your customers 24/7 live support as well as order tracking.
+- After iyzico integration, your customers will have access to 24/7 live support and order tracking through Buyer Protection.
 
-- iyzico WooCommerce module is 100% compatible with WooCommerce and Wordpress systems.
+- It is 100% compatible with the WooCommerce and WordPress ecosystem.
 
-- After the integration you can offer manually created orders and payment support to your customers.
+- After integration, you can provide your customers with manual order creation and payment collection support.
 
 
 Requirements
-PHP 8.0 and greater.
+PHP 7.4.33 and greater.
 cURL
 WooCommerce 9.0.0 requires WordPress 6.6.2+
 
@@ -57,6 +58,79 @@ Wordpress Marketplace in search "iyzico WooCommerce" and install
 7. Order Management
 
 == Changelog ==
+
+= 3.5.29 =
+  * New : Installment options can now be restricted at checkout based on the product, category, or brand installment rules configured in the "iyzico Installment" display plugin (if active). Works together with the installment tab/shortcode display rules — if any item in the cart has installment disabled there, only single payment is offered for that order at checkout. No effect if the "iyzico Installment" plugin isn't installed/active.
+
+= 3.5.28 =
+  * Fix : Bug fix
+
+= 3.5.27 =
+  * Feature: Onboarding Screen
+  * Fix : Bug fix
+
+= 3.5.26 =
+  * Feature: Buyer Protected v2
+  * Fix : Bug fix
+
+= 3.5.25 =
+  * Fix : Bug fix
+
+= 3.5.24 =
+  * Fix : Bug fix
+
+= 3.5.23 =
+  * Fix : Bug fix
+  * Feature : Google XML
+
+= 3.5.22 =
+  * Fix : Bug fix
+  * Feature : Google XML
+
+= 3.5.21 =
+  * Fix : Bug fix
+
+= 3.5.20 =
+  * Fix : Bug fix
+
+= 3.5.19 =
+  * Fix : Table migration
+
+= 3.5.18 =
+  * Fix : Table migration
+
+= 3.5.17 =
+  * Fix : Table migration
+
+= 3.5.16 =
+  * Fix : Table migration
+
+= 3.5.15 =
+  * Fix : Table migration
+
+= 3.5.14 =
+  * Fix : Table migration
+
+= 3.5.13 =
+  * Fix : Table migration
+
+= 3.5.12 =
+  * Fix : Table migration
+
+= 3.5.11 =
+  * Fix : Table bug fixes
+
+= 3.5.10 =
+  * Fix : Table bug fixes
+
+= 3.5.9 =
+  * Fix : Table bug fixes
+
+= 3.5.8 =
+  * New : X-Iyz-Signature-V3 added.
+  * New : Response Signature Validation added.
+  * Fix : Composite product support
+  * WooCommerce + Wordpress latest version tested update
 
 = 3.5.7 =
   * Fix : The amount sent must be equal to the total amount of all breakdowns
@@ -211,6 +285,79 @@ Wordpress Marketplace in search "iyzico WooCommerce" and install
 == Upgrade Notice ==
 
 == Changelog ==
+
+= 3.5.29 =
+  * New : Installment options can now be restricted at checkout based on the product, category, or brand installment rules configured in the "iyzico Installment" display plugin (if active). Works together with the installment tab/shortcode display rules — if any item in the cart has installment disabled there, only single payment is offered for that order at checkout. No effect if the "iyzico Installment" plugin isn't installed/active.
+
+= 3.5.28 =
+  * Fix : Bug fix
+
+= 3.5.27 =
+  * Feature: Onboarding Screen
+  * Fix : Bug fix
+
+= 3.5.26 =
+  * Feature: Buyer Protected v2
+  * Fix : Bug fix
+  
+= 3.5.25 =
+  * Fix : Bug fix
+
+= 3.5.24 =
+  * Fix : Bug fix
+
+= 3.5.23 =
+  * Fix : Bug fix
+  * Feature : Google XML
+
+= 3.5.22 =
+  * Fix : Bug fix
+  * Feature : Google XML
+
+= 3.5.21 =
+  * Fix : Bug fix
+
+= 3.5.20 =
+  * Fix : Bug fix
+
+= 3.5.19 =
+  * Fix : Table migration
+
+= 3.5.18 =
+  * Fix : Table migration
+
+= 3.5.17 =
+  * Fix : Table migration
+
+= 3.5.16 =
+  * Fix : Table migration
+
+= 3.5.15 =
+  * Fix : Table migration
+
+= 3.5.14 =
+  * Fix : Table migration
+
+= 3.5.13 =
+  * Fix : Table migration
+
+= 3.5.12 =
+  * Fix : Table migration
+
+= 3.5.11 =
+  * Fix : Table bug fixes
+
+= 3.5. =
+  * Fix : Table bug fixes
+
+= 3.5.10 =
+  * Fix : Table bug fixes
+
+= 3.5.8 =
+  * New : X-Iyz-Signature-V3 added.
+  * New : Response Signature Validation added.
+  * Fix : Composite product support
+  * WooCommerce + Wordpress latest version tested update
 
 = 3.5.7 =
 * Fix : The amount sent must be equal to the total amount of all breakdowns
