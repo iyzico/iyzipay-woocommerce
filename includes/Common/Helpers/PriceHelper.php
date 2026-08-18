@@ -2,67 +2,39 @@
 
 namespace Iyzico\IyzipayWoocommerce\Common\Helpers;
 
-class PriceHelper {
+class PriceHelper
+{
 
-	public function subTotalPriceCalc( $items, $data ) {
+    public function priceParser($price)
+    {
+        // PHP 8.1+ compatibility: ensure $price is a string
+        $price = $price ?? '';
+        
+        if (strpos($price, ".") === false) {
+            return $price.".0";
+        }
+        $subStrIndex = 0;
+        $priceReversed = strrev($price);
+        for ($i = 0; $i < strlen($priceReversed); $i++) {
+            if (strcmp($priceReversed[$i], "0") == 0) {
+                $subStrIndex = $i + 1;
+            } elseif (strcmp($priceReversed[$i], ".") == 0) {
+                $priceReversed = "0".$priceReversed;
+                break;
+            } else {
+                break;
+            }
+        }
 
-		$price = 0;
+        return strrev(substr($priceReversed, $subStrIndex));
+    }
 
-		$itemSize = count( $items );
-		if ( ! $itemSize ) {
-			$price = $data->get_total();
+    public function realPrice($salePrice, $regularPrice)
+    {
+        if (empty($salePrice)) {
+            $salePrice = $regularPrice;
+        }
 
-			return $this->priceParser( $price );
-		}
-
-		foreach ( $items as $item ) {
-			if ( $item['variation_id'] ) {
-				$productId = $item['variation_id'];
-			} else {
-				$productId = $item['product_id'];
-			}
-
-			$product   = wc_get_product( $productId );
-			$realPrice = $this->realPrice( $product->get_sale_price(), $product->get_price() ) * $item['quantity'];
-			$price     += round( $realPrice, 2 );
-		}
-
-		$shipping = intval( $data->get_shipping_total() ) + intval( $data->get_shipping_tax() );
-		if ( $shipping ) {
-			$price += $shipping;
-		}
-
-		return $this->priceParser( $price );
-	}
-
-	public function priceParser( $price ) {
-
-		if ( strpos( $price, "." ) === false ) {
-			return $price . ".0";
-		}
-
-		$subStrIndex   = 0;
-		$priceReversed = strrev( $price );
-
-		for ( $i = 0; $i < strlen( $priceReversed ); $i ++ ) {
-			if ( strcmp( $priceReversed[ $i ], "0" ) == 0 ) {
-				$subStrIndex = $i + 1;
-			} else if ( strcmp( $priceReversed[ $i ], "." ) == 0 ) {
-				$priceReversed = "0" . $priceReversed;
-				break;
-			} else {
-				break;
-			}
-		}
-
-		return strrev( substr( $priceReversed, $subStrIndex ) );
-	}
-
-	protected function realPrice( $salePrice, $regularPrice ) {
-		if ( empty( $salePrice ) ) {
-			$salePrice = $regularPrice;
-		}
-
-		return $salePrice;
-	}
+        return $salePrice;
+    }
 }

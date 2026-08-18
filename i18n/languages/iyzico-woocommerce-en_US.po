@@ -42,11 +42,17 @@ msgstr "Enable iyzico checkout"
 msgid "Payment Form Design"
 msgstr "Payment Form Design"
 
-msgid "Left"
-msgstr "Bottom Left"
+msgid "Bottom Left + Product Detail"
+msgstr "Bottom Left + Product Detail"
 
-msgid "Right"
-msgstr "Bottom Right"
+msgid "Bottom Right + Product Detail"
+msgstr "Bottom Right + Product Detail"
+
+msgid "Only Overlay Script"
+msgstr "Only Overlay Script"
+
+msgid "Only Product Detail Script"
+msgstr "Only Product Detail Script"
 
 msgid "Hide"
 msgstr "Hide"
@@ -262,3 +268,39 @@ msgstr "The shopping credit transaction has been initiated."
 
 msgid "Refunded %s"
 msgstr "Refunded %s"
+
+msgid "The shopping loan transaction was completed successfully."
+msgstr "The shopping loan transaction was completed successfully."
+
+msgid "The bank transfer transaction was completed successfully."
+msgstr "The bank transfer transaction was completed successfully."
+
+msgid "The balance payment transaction was completed successfully."
+msgstr "The balance payment transaction was completed successfully."
+
+msgid "The BKM Express transaction was completed successfully."
+msgstr "The BKM Express transaction was completed successfully."
+
+msgid "iyzico Bank transfer/EFT payment is pending."
+msgstr "iyzico Bank transfer/EFT payment is pending."
+
+msgid "Enable Pay with iyzico"
+msgstr "Enable Pay with iyzico"
+
+msgid "Cargo Campaign"
+msgstr "Cargo Campaign"
+
+msgid "Enable Cargo Campaign"
+msgstr "Enable Cargo Campaign"
+
+msgid "Order initialized via iyzico Checkout."
+msgstr "Order initialized via iyzico Checkout."
+
+msgid "Customer was redirected to iyzico hosted payment page (redirect flow)."
+msgstr "Customer was redirected to iyzico hosted payment page (redirect flow)."
+
+msgid "iyzico Checkout iframe fully loaded in customer browser (iyziInit detected)."
+msgstr "iyzico Checkout iframe fully loaded in customer browser (iyziInit detected)."
+
+msgid "Order status will be changed from %1$s to %2$s by iyzico payment result."
+msgstr "Order status will be changed from %1$s to %2$s by iyzico payment result."

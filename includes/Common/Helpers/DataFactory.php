@@ -2,145 +2,222 @@
 
 namespace Iyzico\IyzipayWoocommerce\Common\Helpers;
 
-use Iyzico\IyzipayWoocommerce\Checkout\CheckoutSettings;
-use Iyzipay\Model\Buyer;
 use Iyzipay\Model\Address;
 use Iyzipay\Model\BasketItem;
 use Iyzipay\Model\BasketItemType;
+use Iyzipay\Model\Buyer;
+use stdClass;
 use WC_Order;
 
-class DataFactory {
-	protected $priceHelper;
-	protected $checkoutSettings;
+class DataFactory
+{
+    protected $priceHelper;
 
-	public function __construct( PriceHelper $priceHelper, CheckoutSettings $checkoutSettings ) {
-		$this->priceHelper      = $priceHelper;
-		$this->checkoutSettings = $checkoutSettings;
-	}
+    public function __construct()
+    {
+        $this->priceHelper = new PriceHelper();
+    }
 
-	protected function createBuyer( $customer, WC_Order $order ): Buyer {
-		$buyer = new Buyer();
-		$buyer->setId( $this->validateStringVal( $customer->ID ) );
-		$buyer->setName( $this->validateStringVal( $order->get_billing_first_name() ) );
-		$buyer->setSurname( $this->validateStringVal( $order->get_billing_last_name() ) );
-		$buyer->setIdentityNumber( "11111111111" );
-		$buyer->setEmail( $this->validateStringVal( $order->get_billing_email() ) );
-		$buyer->setRegistrationDate( date( 'Y-m-d H:i:s' ) );
-		$buyer->setLastLoginDate( date( 'Y-m-d H:i:s' ) );
-		$buyer->setRegistrationAddress( $this->validateStringVal( $order->get_billing_address_1() ) . ' ' . $this->validateStringVal( $order->get_billing_address_2() ) );
-		$buyer->setCity( $this->validateStringVal( $order->get_billing_city() ) );
-		$buyer->setCountry( $this->validateStringVal( $order->get_billing_country() ) );
-		$buyer->setZipCode( $this->validateStringVal( $order->get_billing_postcode() ) );
-		$buyer->setIp( $this->validateStringVal( $_SERVER['REMOTE_ADDR'] ) );
-		$buyer->setGsmNumber( $this->validateStringVal( $order->get_billing_phone() ) );
+    public function prepareCheckoutData($customer, WC_Order $order, array $cart)
+    {
+        $cartHasPhysicalProduct = $this->cartHasPhysicalProduct($cart);
+        $data = [
+            'buyer' => $this->createBuyer($customer, $order),
+            'billingAddress' => $this->createAddress($order, 'billing'),
+            'shippingAddress' => $this->createAddress($order, 'shipping'),
+            'basketItems' => $this->createBasket($order, $cart),
+        ];
 
-		return $buyer;
-	}
+        if (!$cartHasPhysicalProduct) {
+            unset($data['shippingAddress']);
+        }
 
-	protected function createAddress( WC_Order $order, string $type ): Address {
-		$isTypeBilling = $type === "billing";
+        return $data;
+    }
 
-		$firstName   = $isTypeBilling ? $order->get_billing_first_name() : $order->get_shipping_first_name();
-		$lastName    = $isTypeBilling ? $order->get_billing_last_name() : $order->get_shipping_last_name();
-		$contactName = $firstName . ' ' . $lastName;
+    protected function cartHasPhysicalProduct(array $cart)
+    {
+        foreach ($cart as $item) {
+            if (!$item['data']->is_virtual()) {
+                return true;
+            }
+        }
 
-		$city        = $isTypeBilling ? $order->get_billing_city() : $order->get_shipping_city();
-		$country     = $isTypeBilling ? $order->get_billing_country() : $order->get_shipping_country();
-		$address1    = $isTypeBilling ? $order->get_billing_address_1() : $order->get_shipping_address_1();
-		$address2    = $isTypeBilling ? $order->get_billing_address_2() : $order->get_shipping_address_2();
-		$fullAddress = trim( $address1 . ' ' . $address2 );
-		$zipCode     = $isTypeBilling ? $order->get_billing_postcode() : $order->get_shipping_postcode();
+        return false;
+    }
 
-		$address = new Address();
-		$address->setContactName( $this->validateStringVal( $contactName ) );
-		$address->setCity( $this->validateStringVal( $city ) );
-		$address->setCountry( $this->validateStringVal( $country ) );
-		$address->setAddress( $this->validateStringVal( $fullAddress ) );
-		$address->setZipCode( $this->validateStringVal( $zipCode ) );
+    protected function createBuyer($customer, WC_Order $order)
+    {
 
-		return $address;
-	}
+        $ipAddress = '127.0.0.1';
 
-	protected function createBasket( WC_Order $order, array $cart ): array {
-		$basketItems             = [];
-		$isShippingPriceIncluded = $this->orderHasShippingPrice( $order );
+        if (!empty($_SERVER['REMOTE_ADDR'])) {
+            $ipAddress = sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR']));
+        }
 
-		if ( $isShippingPriceIncluded ) {
-			$shippingItem = new BasketItem();
-			$shippingItem->setId( 'SHIPPING' );
-			$shippingItem->setName( 'Shipping' );
-			$shippingItem->setCategory1( 'Shipping' );
-			$shippingItem->setItemType( BasketItemType::PHYSICAL );
-			$shippingPrice = strval( intval( $order->get_shipping_total() ) + intval( $order->get_shipping_tax() ) );
-			$shippingItem->setPrice( $shippingPrice );
-			$basketItems[] = $shippingItem;
-		}
+        $buyer = new Buyer();
+        $buyer->setId($this->validateStringVal($customer->ID));
+        $buyer->setName($this->validateStringVal($order->get_billing_first_name()));
+        $buyer->setSurname($this->validateStringVal($order->get_billing_last_name()));
+        $buyer->setIdentityNumber("11111111111");
+        $buyer->setEmail($this->validateStringVal($order->get_billing_email()));
+        $buyer->setRegistrationDate(gmdate('Y-m-d H:i:s'));
+        $buyer->setLastLoginDate(gmdate('Y-m-d H:i:s'));
+        $buyer->setRegistrationAddress($this->validateStringVal($order->get_billing_address_1()).' '.$this->validateStringVal($order->get_billing_address_2()));
+        $buyer->setCity($this->validateStringVal($order->get_billing_city()));
+        $buyer->setCountry($this->validateStringVal($order->get_billing_country()));
+        $buyer->setZipCode($this->validateStringVal($order->get_billing_postcode()));
+        $buyer->setIp($this->validateStringVal($ipAddress));
+        $buyer->setGsmNumber($this->validateStringVal($order->get_billing_phone()));
 
-		foreach ( $cart as $item ) {
-			$product    = $item['data'];
-			$basketItem = new BasketItem();
-			$basketItem->setId( (string) $item['product_id'] );
-			$basketItem->setName( $product->get_name() );
+        return $buyer;
+    }
 
-			$categories = get_the_terms( $product->get_id(), 'product_cat' );
-			if ( $categories && ! is_wp_error( $categories ) ) {
-				$category_names = wp_list_pluck( $categories, 'name' );
-				$category1      = implode( ', ', $category_names );
-				$basketItem->setCategory1( $this->validateStringVal( $category1 ) );
-			}
+    protected function validateStringVal($string)
+    {
+        if (empty($string)) {
+            return 'UNKNOWN';
+        }
 
-			$basketItem->setItemType( $product->is_virtual() ? BasketItemType::VIRTUAL : BasketItemType::PHYSICAL );
-			$basketItem->setPrice( $item['quantity'] * $this->priceHelper->priceParser( $product->get_price() ) );
-			$basketItems[] = $basketItem;
-		}
+        if (is_null($string)) {
+            return 'UNKNOWN';
+        }
 
-		return $basketItems;
-	}
+        if (strlen($string) <= 0) {
+            return 'UNKNOWN';
+        }
 
-	public function prepareCheckoutData( $customer, WC_Order $order, array $cart ): array {
-		$cartHasPhysicalProduct = $this->cartHasPhysicalProduct( $cart );
-		$data                   = [
-			'buyer'           => $this->createBuyer( $customer, $order ),
-			'billingAddress'  => $this->createAddress( $order, 'billing' ),
-			'shippingAddress' => $this->createAddress( $order, 'shipping' ),
-			'basketItems'     => $this->createBasket( $order, $cart ),
-		];
+        return substr($string, 0, 249);
+    }
 
-		if ( ! $cartHasPhysicalProduct ) {
-			unset( $data['shippingAddress'] );
-		}
+    protected function createAddress(WC_Order $order, string $type)
+    {
+        $isTypeBilling = $type === "billing";
 
-		return $data;
+        $firstName = $this->validateStringVal($isTypeBilling ? $order->get_billing_first_name() : $order->get_shipping_first_name());
+        $lastName = $this->validateStringVal($isTypeBilling ? $order->get_billing_last_name() : $order->get_shipping_last_name());
+        $contactName = $firstName.' '.$lastName;
 
-	}
+        $city = $this->validateStringVal($isTypeBilling ? $order->get_billing_city() : $order->get_shipping_city());
+        $country = $this->validateStringVal($isTypeBilling ? $order->get_billing_country() : $order->get_shipping_country());
+        $address1 = $this->validateStringVal($isTypeBilling ? $order->get_billing_address_1() : $order->get_shipping_address_1());
+        $address2 = $this->validateStringVal($isTypeBilling ? $order->get_billing_address_2() : $order->get_shipping_address_2());
+        $fullAddress = trim($address1.' '.$address2);
+        $zipCode = $isTypeBilling ? $order->get_billing_postcode() : $order->get_shipping_postcode();
 
-	protected function cartHasPhysicalProduct( array $cart ): bool {
-		foreach ( $cart as $item ) {
-			if ( ! $item['data']->is_virtual() ) {
-				return true;
-			}
-		}
+        $address = new Address();
+        $address->setContactName($contactName);
+        $address->setCity($city);
+        $address->setCountry($country);
+        $address->setAddress($fullAddress);
+        $address->setZipCode($zipCode);
 
-		return false;
-	}
+        return $address;
+    }
 
-	protected function orderHasShippingPrice( WC_Order $order ): bool {
-		return $order->get_shipping_total() > 0;
-	}
+    protected function createBasket(WC_Order $order, array $cart)
+    {
+        $basketItems = [];
+        $isShippingPriceIncluded = $this->orderHasShippingPrice($order);
 
-	protected function validateStringVal( $string ): string {
-		if ( empty( $string ) ) {
-			return 'UNKNOWN';
-		}
+        if ($isShippingPriceIncluded) {
+            $shippingItem = new BasketItem();
+            $shippingItem->setId('SHIPPING');
+            $shippingItem->setName('Shipping');
+            $shippingItem->setCategory1('Shipping');
+            $shippingItem->setItemType(BasketItemType::PHYSICAL);
+            $shippingItemRealPrice = floatval($order->get_shipping_total()) + floatval($order->get_shipping_tax());
+            $shippingItemPrice = $this->priceHelper->priceParser(round($shippingItemRealPrice, 2));
+            $shippingItem->setPrice($shippingItemPrice);
+            $basketItems[] = $shippingItem;
+        }
 
-		if ( is_null( $string ) ) {
-			return 'UNKNOWN';
-		}
+        $itemSize = count($cart);
+        if (!$itemSize) {
+            return $this->oneProductCalc($order);
+        }
 
-		if ( strlen( $string ) === 0 ) {
-			return 'UNKNOWN';
-		}
+        foreach ($cart as $item) {
+            $product = $item['data'];
+            if (!$product) {
+                continue;
+            }
 
-		return $string;
-	}
+            $basketItem = new BasketItem();
+            $basketItemId = 'UNKNOWN';
+
+            if (get_class($product) === 'WC_Product_Composite') {
+                $basketItemId = $this->validateStringVal($product->get_id());
+            }
+
+            if (get_class($product) === 'WC_Product_Variation') {
+                $basketItemId = $this->validateStringVal(isset($item['variation_id']) && $item['variation_id'] ? (string) $item['variation_id'] : (string) $item['product_id']);
+            }
+
+            if ($basketItemId === 'UNKNOWN') {
+                $basketItemId = $this->validateStringVal(isset($item['product_id']) && $item['product_id'] ? (string) $item['product_id'] : (string) $product->get_sku());
+            }
+
+            $basketItem->setId($this->validateStringVal($basketItemId));
+            $basketItem->setName($this->validateStringVal($product->get_name()));
+
+            $product_id = $product->is_type('variation') ? $product->get_parent_id() : $product->get_id();
+            $categories = get_the_terms($product_id, 'product_cat');
+
+            $category1 = '';
+            if ($categories && !is_wp_error($categories)) {
+                $category_names = wp_list_pluck($categories, 'name');
+                $category1 = implode(', ', $category_names);
+            }
+
+            $basketItem->setCategory1($this->validateStringVal($category1));
+            $basketItem->setItemType($product->is_virtual() ? BasketItemType::VIRTUAL : BasketItemType::PHYSICAL);
+
+            $realPrice = $item['quantity'] * $this->priceHelper->realPrice(
+                    $product->get_sale_price(),
+                    $product->get_price()
+                );
+
+            $basketItemPrice = $this->priceHelper->priceParser(round($realPrice, 2));
+            $basketItem->setPrice($basketItemPrice);
+
+            if ($basketItemPrice > 0) {
+                $basketItems[] = $basketItem;
+            }
+        }
+
+        return $basketItems;
+    }
+
+    protected function orderHasShippingPrice(WC_Order $order)
+    {
+        return $order->get_shipping_total() > 0;
+    }
+
+    protected function oneProductCalc($order)
+    {
+        $basketItems = [];
+        
+        $basketItem = new BasketItem();
+        $basketItem->setId($this->validateStringVal($order->get_id()));
+        $basketItem->setPrice($this->priceHelper->priceParser(round($order->get_total(), 2)));
+        $basketItem->setName($this->validateStringVal('Woocommerce - Custom Order Page'));
+        $basketItem->setCategory1($this->validateStringVal('Custom Order Page'));
+        $basketItem->setItemType(BasketItemType::PHYSICAL);
+        
+        $basketItems[] = $basketItem;
+
+        return $basketItems;
+    }
+
+    public function createPrice(array $cart)
+    {
+        $price = 0.00;
+
+        foreach ($cart as $item) {
+            $price += (float) $item->getPrice();
+        }
+
+        return $this->priceHelper->priceParser(round($price, 2));
+    }
 }

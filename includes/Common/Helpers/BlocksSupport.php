@@ -12,48 +12,47 @@ use Iyzico\IyzipayWoocommerce\Pwi\BlocksPwiMethod;
  *
  * @package Iyzico\IyzipayWoocommerce\Checkout
  */
-class BlocksSupport {
+class BlocksSupport
+{
 
-	/**
-	 * @return void
-	 */
-	public static function init(): void {
-		add_action( 'woocommerce_blocks_loaded', [ self::class, 'woocommerce_blocks_support' ] );
+    /**
+     * @return void
+     */
+    public static function init(): void
+    {
+        add_action('woocommerce_blocks_loaded', [self::class, 'woocommerce_blocks_support']);
+        add_action('before_woocommerce_init', [self::class, 'woocommerce_blocks_compatibility']);
+    }
 
-		add_action( 'before_woocommerce_init', function () {
-			error_log( 'WooCommerce block support loaded.' );
-		} );
+    /**
+     * @return void
+     */
+    public static function woocommerce_blocks_support(): void
+    {
+        if (!class_exists('Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType')) {
+            return;
+        }
 
-		add_action( 'before_woocommerce_init', [ self::class, 'woocommerce_blocks_compatibility' ] );
-	}
+        add_action(
+            'woocommerce_blocks_payment_method_type_registration',
+            function (PaymentMethodRegistry $payment_method_registry) {
+                $payment_method_registry->register(new BlocksCheckoutMethod);
+                $payment_method_registry->register(new BlocksPwiMethod);
+            }
+        );
+    }
 
-	/**
-	 * @return void
-	 */
-	public static function woocommerce_blocks_support(): void {
-		if ( ! class_exists( 'Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType' ) ) {
-			return;
-		}
-
-		add_action(
-			'woocommerce_blocks_payment_method_type_registration',
-			function ( PaymentMethodRegistry $payment_method_registry ) {
-				$payment_method_registry->register( new BlocksCheckoutMethod );
-				$payment_method_registry->register( new BlocksPwiMethod );
-			}
-		);
-	}
-
-	/**
-	 * @return void
-	 */
-	public static function woocommerce_blocks_compatibility(): void {
-		if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
-			FeaturesUtil::declare_compatibility(
-				'cart_checkout_blocks',
-				PLUGIN_BASEFILE,
-				true
-			);
-		}
-	}
+    /**
+     * @return void
+     */
+    public static function woocommerce_blocks_compatibility(): void
+    {
+        if (class_exists('\Automattic\WooCommerce\Utilities\FeaturesUtil')) {
+            FeaturesUtil::declare_compatibility(
+                'cart_checkout_blocks',
+                PLUGIN_BASEFILE,
+                true
+            );
+        }
+    }
 }

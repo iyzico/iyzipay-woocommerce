@@ -1,3 +1,0 @@
-[
-  "ALTER TABLE `{prefix}iyzico_order` MODIFY COLUMN `payment_id` bigint(11) NOT NULL;"
-]
