@@ -121,10 +121,23 @@ class CheckoutForm extends WC_Payment_Gateway
     public function handle_api_request()
     {
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-        if (isset($_GET['wc-api']) && $_GET['wc-api'] === 'iyzipay') {
-            $this->paymentProcessor->processCallback();
+        if (!isset($_GET['wc-api']) || $_GET['wc-api'] !== 'iyzipay') {
+            return;
+        }
+
+        // A real iyzico callback is always a POST carrying a token. A tokenless request
+        // is a back/refresh, a visit from history or a prefetch; instead of showing a
+        // payment error we redirect to the same URL without wc-api and let WooCommerce
+        // validate the order key. Returning is not enough here: WooCommerce calls
+        // die('-1') unconditionally after the woocommerce_api_request hook.
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing
+        if (empty($_POST['token'])) {
+            wp_safe_redirect(remove_query_arg('wc-api'));
             exit;
         }
+
+        $this->paymentProcessor->processCallback();
+        exit;
     }
 
     public function process_refund($order_id, $amount = null, $reason = '')

@@ -9,6 +9,7 @@ use Iyzipay\Model\CheckoutForm as CheckoutFormModel;
 use Iyzipay\Model\Mapper\CheckoutFormMapper;
 use Iyzipay\Options;
 use Iyzipay\Request\RetrieveCheckoutFormRequest;
+use WC_Geolocation;
 use WC_Order;
 use WC_Order_Item_Fee;
 
@@ -318,10 +319,21 @@ class PaymentProcessor
 
     private function handleException(Exception $e): void
     {
-        $this->logger->error('PaymentProcessor.php: ' . $e->getMessage());
+        $this->logger->error(sprintf(
+            'PaymentProcessor.php: %s [method=%s uri=%s conversationId=%s ip=%s]',
+            $e->getMessage(),
+            isset($_SERVER['REQUEST_METHOD']) ? sanitize_text_field(wp_unslash($_SERVER['REQUEST_METHOD'])) : '-',
+            isset($_SERVER['REQUEST_URI']) ? esc_url_raw(wp_unslash($_SERVER['REQUEST_URI'])) : '-',
+            WC()->session !== null ? (string) WC()->session->get('conversationId') : '-',
+            WC_Geolocation::get_ip_address()
+        ));
+
+        // No wc_add_notice() here: CheckoutForm::display_errors() reads the message
+        // from the session and prints it once on the ?payment=failed page. Doing both
+        // left a second notice in the queue that surfaced again on the next
+        // WooCommerce page the customer visited.
         if (WC()->session !== null) {
             WC()->session->set('iyzico_error', $e->getMessage());
-            wc_add_notice($e->getMessage(), 'error');
         }
         wp_redirect(wc_get_checkout_url() . '?payment=failed');
         exit;
